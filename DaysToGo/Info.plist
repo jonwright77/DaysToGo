@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs access to your photo library to show past images.</string>
+
+    <key>NSCalendarsUsageDescription</key>
+    <string>This app uses your calendar to show past events from reflection dates.</string>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict/>
+	</array>
+</dict>
+</plist>
