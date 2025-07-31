@@ -9,16 +9,18 @@ import SwiftUI
 import Photos
 import EventKit
 
-// MARK: - Lightweight ViewModel to avoid duplication issues
+// MARK: - Lightweight ViewModel
 struct CalendarEventViewModel: Identifiable, Hashable {
     let id: String
     let title: String
     let time: String
+    let calendarName: String
 
     init(event: EKEvent) {
         self.id = event.eventIdentifier
         self.title = event.title
         self.time = event.startDate.formatted(date: .omitted, time: .shortened)
+        self.calendarName = event.calendar.title
     }
 }
 
@@ -35,16 +37,15 @@ struct ReminderDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // 🔹 Title Header
+                // 🔹 Title
                 Text(reminder.title)
                     .font(.title)
                     .bold()
 
-                // ✅ Section 1: Days Left Summary
+                // ✅ Summary Section
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Summary")
                         .font(.headline)
-                        .padding(.bottom, 2)
 
                     if let reflectionDate = reminder.reflectionDate {
                         HStack {
@@ -64,7 +65,7 @@ struct ReminderDetailView: View {
                 .offset(y: didAnimate ? 0 : 20)
                 .animation(.easeOut(duration: 0.4).delay(0.1), value: didAnimate)
 
-                // 🖼️ Section 2: Photos
+                // 🖼️ Photos Section
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Photos")
                         .font(.headline)
@@ -91,7 +92,7 @@ struct ReminderDetailView: View {
                 .offset(y: didAnimate ? 0 : 20)
                 .animation(.easeOut(duration: 0.4).delay(0.3), value: didAnimate)
 
-                // 📅 Section 3: Calendar Events
+                // 📅 Calendar Events Section
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Calendar Events")
                         .font(.headline)
@@ -104,6 +105,9 @@ struct ReminderDetailView: View {
                                 Text(event.time)
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
+                                Text(event.calendarName)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
                             }
                             .padding(8)
                             .background(Color(.systemGray5))
