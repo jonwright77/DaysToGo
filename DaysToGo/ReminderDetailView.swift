@@ -1,15 +1,7 @@
-//
-//  ReminderDetailView.swift
-//  DaysToGo
-//
-//  Created by Jon Wright on 23/07/2025.
-//
-
 import SwiftUI
 import Photos
 import EventKit
 
-// MARK: - Lightweight ViewModel
 struct CalendarEventViewModel: Identifiable, Hashable {
     let id: String
     let title: String
@@ -24,80 +16,72 @@ struct CalendarEventViewModel: Identifiable, Hashable {
     }
 }
 
+struct CalendarStatus: Identifiable {
+    let id: String
+    let title: String
+    let isEnabled: Bool
+}
+
 struct ReminderDetailView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var calendarPrefs: CalendarPreferences
+
     @State var reminder: Reminder
     @ObservedObject var store: ReminderStore
-    @State private var showingEdit = false
 
+    @State private var showingEdit = false
     @State private var reflectionPhotos: [UIImage] = []
     @State private var calendarEvents: [CalendarEventViewModel] = []
-    @State private var didAnimate: Bool = false
+    @State private var calendarStatuses: [CalendarStatus] = []
 
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // 🔹 Title
+                // Title
                 Text(reminder.title)
                     .font(.title)
                     .bold()
 
-                // ✅ Summary Section
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Summary")
-                        .font(.headline)
-
-                    if let reflectionDate = reminder.reflectionDate {
-                        HStack {
-                            Text(reflectionDate.formatted(date: .long, time: .omitted))
-                            Spacer()
-                            Text("\(reminder.daysRemaining) Day\(reminder.daysRemaining == 1 ? "" : "s")")
-                                .fontWeight(.medium)
-                            Spacer()
-                            Text(reminder.date.formatted(date: .long, time: .omitted))
-                        }
-                        .font(.body)
+                // Date Range
+                if let reflectionDate = reminder.reflectionDate {
+                    HStack {
+                        Text(reflectionDate.formatted(date: .long, time: .omitted))
+                        Spacer()
+                        Text("\(reminder.daysRemaining) Day\(reminder.daysRemaining == 1 ? "" : "s")")
+                            .fontWeight(.medium)
+                        Spacer()
+                        Text(reminder.date.formatted(date: .long, time: .omitted))
                     }
+                    .font(.body)
+                    .padding(.horizontal)
                 }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
-                .opacity(didAnimate ? 1 : 0)
-                .offset(y: didAnimate ? 0 : 20)
-                .animation(.easeOut(duration: 0.4).delay(0.1), value: didAnimate)
 
-                // 🖼️ Photos Section
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Photos")
-                        .font(.headline)
+                Divider()
 
-                    if !reflectionPhotos.isEmpty {
-                        LazyVGrid(columns: [GridItem(), GridItem()], spacing: 8) {
-                            ForEach(reflectionPhotos, id: \.self) { image in
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 160, height: 160)
-                                    .clipped()
-                                    .cornerRadius(8)
-                            }
+                // Reflection Photos
+                if !reflectionPhotos.isEmpty {
+                    LazyVGrid(columns: [GridItem(), GridItem()], spacing: 8) {
+                        ForEach(reflectionPhotos, id: \.self) { image in
+                            Image(uiImage: image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 160, height: 160)
+                                .clipped()
+                                .cornerRadius(8)
                         }
-                    } else if let reflectionDate = reminder.reflectionDate {
-                        Text("No Photos on \(reflectionDate.formatted(date: .long, time: .omitted))")
-                            .foregroundColor(.secondary)
                     }
+                    .padding(.top)
+                } else if let reflectionDate = reminder.reflectionDate {
+                    Text("No Photos on \(reflectionDate.formatted(date: .long, time: .omitted))")
+                        .foregroundColor(.secondary)
+                        .padding(.top)
                 }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
-                .opacity(didAnimate ? 1 : 0)
-                .offset(y: didAnimate ? 0 : 20)
-                .animation(.easeOut(duration: 0.4).delay(0.3), value: didAnimate)
 
-                // 📅 Calendar Events Section
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Calendar Events")
-                        .font(.headline)
+                Divider()
 
-                    if !calendarEvents.isEmpty {
+                // Calendar Events
+                if !calendarEvents.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
                         ForEach(calendarEvents) { event in
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(event.title)
@@ -110,23 +94,20 @@ struct ReminderDetailView: View {
                                     .foregroundColor(.gray)
                             }
                             .padding(8)
-                            .background(Color(.systemGray5))
+                            .background(Color(.systemGray6))
                             .cornerRadius(8)
                         }
-                    } else if let reflectionDate = reminder.reflectionDate {
-                        Text("No Calendar Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
-                            .foregroundColor(.secondary)
                     }
+                    .padding(.horizontal)
+                } else if let reflectionDate = reminder.reflectionDate {
+                    Text("No Calendar Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                        .foregroundColor(.secondary)
+                        .padding(.top)
                 }
-                .padding()
-                .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6)))
-                .opacity(didAnimate ? 1 : 0)
-                .offset(y: didAnimate ? 0 : 20)
-                .animation(.easeOut(duration: 0.4).delay(0.5), value: didAnimate)
 
                 Spacer()
 
-                // ✏️ Edit / Delete Buttons
+                // Actions
                 HStack(spacing: 30) {
                     Button("Edit") {
                         showingEdit = true
@@ -153,42 +134,47 @@ struct ReminderDetailView: View {
                 }
             }
         }
-        .onAppear {
-            if let reflectionDate = reminder.reflectionDate {
-                PhotoFetcher.fetchPhotos(from: reflectionDate) { images in
-                    self.reflectionPhotos = images
-                }
-
-                fetchCalendarEvents(on: reflectionDate) { eventVMs in
-                    self.calendarEvents = eventVMs
-                }
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                withAnimation {
-                    didAnimate = true
-                }
-            }
-        }
+        .onAppear(perform: loadPhotosAndCalendarEvents)
+        .onChange(of: calendarPrefs.enabledCalendarIDs, perform: { _ in
+            loadPhotosAndCalendarEvents()
+        })
     }
 
-    // MARK: - Fetch Calendar Events
-    private func fetchCalendarEvents(on date: Date, completion: @escaping ([CalendarEventViewModel]) -> Void) {
-        let store = EKEventStore()
-        store.requestAccess(to: .event) { granted, error in
-            guard granted, error == nil else {
-                completion([])
-                return
-            }
+    private func loadPhotosAndCalendarEvents() {
+        guard let reflectionDate = reminder.reflectionDate else { return }
 
-            let startOfDay = Calendar.current.startOfDay(for: date)
-            let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
-
-            let predicate = store.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: nil)
-            let events = store.events(matching: predicate)
-
-            let viewModels = events.map { CalendarEventViewModel(event: $0) }
-            completion(viewModels)
+        // Load photos
+        PhotoFetcher.fetchPhotos(from: reflectionDate) { images in
+            reflectionPhotos = images
         }
+
+        let eventStore = EKEventStore()
+        let allCalendars = eventStore.calendars(for: .event)
+
+        // Save calendar states
+        calendarStatuses = allCalendars.map {
+            CalendarStatus(
+                id: $0.calendarIdentifier,
+                title: $0.title,
+                isEnabled: calendarPrefs.enabledCalendarIDs.contains($0.calendarIdentifier)
+            )
+        }
+
+        // Filter enabled
+        let enabledCalendars = allCalendars.filter {
+            calendarPrefs.enabledCalendarIDs.contains($0.calendarIdentifier)
+        }
+
+        guard !enabledCalendars.isEmpty else {
+            calendarEvents = []
+            return
+        }
+
+        let startOfDay = Calendar.current.startOfDay(for: reflectionDate)
+        let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        let predicate = eventStore.predicateForEvents(withStart: startOfDay, end: endOfDay, calendars: enabledCalendars)
+        let events = eventStore.events(matching: predicate)
+        calendarEvents = events.map { CalendarEventViewModel(event: $0) }
     }
 }

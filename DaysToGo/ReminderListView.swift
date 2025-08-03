@@ -1,19 +1,20 @@
 import SwiftUI
 
 struct ReminderListView: View {
+    @EnvironmentObject var calendarPrefs: CalendarPreferences
+
     @StateObject private var store = ReminderStore()
     @State private var showingAddReminder = false
-    @State private var didAnimate: Bool = false
+    @State private var showingSettings = false
+    @State private var didAnimate = false
 
     var body: some View {
         NavigationView {
             ZStack {
-                // Optional: Subtle background color
                 Color(.systemGroupedBackground)
                     .ignoresSafeArea()
 
                 VStack(alignment: .leading, spacing: 16) {
-                    // Optional: Large styled header
                     Text("Your Reminders")
                         .font(.largeTitle)
                         .bold()
@@ -50,6 +51,16 @@ struct ReminderListView: View {
             }
             .navigationTitle("Reminders")
             .toolbar {
+                // ⚙️ Settings Button (left)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        showingSettings = true
+                    }) {
+                        Image(systemName: "gearshape")
+                    }
+                }
+
+                // ➕ Add Reminder (right)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         showingAddReminder = true
@@ -63,6 +74,9 @@ struct ReminderListView: View {
                     store.addReminder(newReminder)
                 }
             }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView(calendarPrefs: calendarPrefs)
+            }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     didAnimate = true
@@ -71,5 +85,3 @@ struct ReminderListView: View {
         }
     }
 }
-
-
