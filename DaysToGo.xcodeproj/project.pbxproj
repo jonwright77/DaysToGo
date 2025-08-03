@@ -6,7 +6,24 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5C2986E82EB6217400E5E7FC /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2986E72EB6217400E5E7FC /* WidgetKit.framework */; };
+		5C2986EA2EB6217400E5E7FC /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C2986E92EB6217400E5E7FC /* SwiftUI.framework */; };
+		5C2986F92EB6217500E5E7FC /* DaysToGoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5C2986E52EB6217400E5E7FC /* DaysToGoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5CEDE2B42EB76A3C002D66CA /* DaysToGoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */; };
+		5CEDE2BE2EB76A3C002D66CA /* DaysToGoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */; };
+		5CEDE2BF2EB76A3C002D66CA /* DaysToGoKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5CEDE2CB2EB76B15002D66CA /* DaysToGoKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		5C2986F72EB6217500E5E7FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C4182C72E2E7F6C002814DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5C2986E42EB6217400E5E7FC;
+			remoteInfo = DaysToGoWidgetExtension;
+		};
 		5C4182DD2E2E7F6D002814DC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5C4182C72E2E7F6C002814DC /* Project object */;
@@ -21,15 +38,81 @@
 			remoteGlobalIDString = 5C4182CE2E2E7F6C002814DC;
 			remoteInfo = DaysToGo;
 		};
+		5CEDE2B52EB76A3C002D66CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C4182C72E2E7F6C002814DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CEDE2A82EB76A3C002D66CA;
+			remoteInfo = DaysToGoKit;
+		};
+		5CEDE2B72EB76A3C002D66CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C4182C72E2E7F6C002814DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5C4182CE2E2E7F6C002814DC;
+			remoteInfo = DaysToGo;
+		};
+		5CEDE2BC2EB76A3C002D66CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C4182C72E2E7F6C002814DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CEDE2A82EB76A3C002D66CA;
+			remoteInfo = DaysToGoKit;
+		};
+		5CEDE2CD2EB76B15002D66CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C4182C72E2E7F6C002814DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CEDE2A82EB76A3C002D66CA;
+			remoteInfo = DaysToGoKit;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		5C2986FE2EB6217500E5E7FC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				5C2986F92EB6217500E5E7FC /* DaysToGoWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5CEDE2C32EB76A3C002D66CA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5CEDE2BF2EB76A3C002D66CA /* DaysToGoKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		5C2986E52EB6217400E5E7FC /* DaysToGoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DaysToGoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C2986E72EB6217400E5E7FC /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		5C2986E92EB6217400E5E7FC /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		5C4182CF2E2E7F6C002814DC /* DaysToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DaysToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C4182DC2E2E7F6D002814DC /* DaysToGoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DaysToGoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C4182E62E2E7F6D002814DC /* DaysToGoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DaysToGoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CEDE2552EB63C16002D66CA /* DaysToGoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DaysToGoWidgetExtension.entitlements; sourceTree = "<group>"; };
+		5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DaysToGoKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CEDE2B32EB76A3C002D66CA /* DaysToGoKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DaysToGoKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		5C2986FD2EB6217500E5E7FC /* Exceptions for "DaysToGoWidget" folder in "DaysToGoWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5C2986E42EB6217400E5E7FC /* DaysToGoWidgetExtension */;
+		};
 		5C41830C2E3231C2002814DC /* Exceptions for "DaysToGo" folder in "DaysToGo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -40,6 +123,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		5C2986EB2EB6217400E5E7FC /* DaysToGoWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				5C2986FD2EB6217500E5E7FC /* Exceptions for "DaysToGoWidget" folder in "DaysToGoWidgetExtension" target */,
+			);
+			path = DaysToGoWidget;
+			sourceTree = "<group>";
+		};
 		5C4182D12E2E7F6C002814DC /* DaysToGo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -58,13 +149,34 @@
 			path = DaysToGoUITests;
 			sourceTree = "<group>";
 		};
+		5CEDE2AA2EB76A3C002D66CA /* DaysToGoKit */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DaysToGoKit;
+			sourceTree = "<group>";
+		};
+		5CEDE2B92EB76A3C002D66CA /* DaysToGoKitTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DaysToGoKitTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5C2986E22EB6217400E5E7FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5C2986EA2EB6217400E5E7FC /* SwiftUI.framework in Frameworks */,
+				5CEDE2CB2EB76B15002D66CA /* DaysToGoKit.framework in Frameworks */,
+				5C2986E82EB6217400E5E7FC /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5C4182CC2E2E7F6C002814DC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CEDE2BE2EB76A3C002D66CA /* DaysToGoKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,15 +194,44 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5CEDE2A62EB76A3C002D66CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5CEDE2B02EB76A3C002D66CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CEDE2B42EB76A3C002D66CA /* DaysToGoKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C2986E62EB6217400E5E7FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C2986E72EB6217400E5E7FC /* WidgetKit.framework */,
+				5C2986E92EB6217400E5E7FC /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5C4182C62E2E7F6C002814DC = {
 			isa = PBXGroup;
 			children = (
+				5CEDE2552EB63C16002D66CA /* DaysToGoWidgetExtension.entitlements */,
 				5C4182D12E2E7F6C002814DC /* DaysToGo */,
 				5C4182DF2E2E7F6D002814DC /* DaysToGoTests */,
 				5C4182E92E2E7F6D002814DC /* DaysToGoUITests */,
+				5C2986EB2EB6217400E5E7FC /* DaysToGoWidget */,
+				5CEDE2AA2EB76A3C002D66CA /* DaysToGoKit */,
+				5CEDE2B92EB76A3C002D66CA /* DaysToGoKitTests */,
+				5C2986E62EB6217400E5E7FC /* Frameworks */,
 				5C4182D02E2E7F6C002814DC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -101,13 +242,49 @@
 				5C4182CF2E2E7F6C002814DC /* DaysToGo.app */,
 				5C4182DC2E2E7F6D002814DC /* DaysToGoTests.xctest */,
 				5C4182E62E2E7F6D002814DC /* DaysToGoUITests.xctest */,
+				5C2986E52EB6217400E5E7FC /* DaysToGoWidgetExtension.appex */,
+				5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */,
+				5CEDE2B32EB76A3C002D66CA /* DaysToGoKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		5CEDE2A42EB76A3C002D66CA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		5C2986E42EB6217400E5E7FC /* DaysToGoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C2986FA2EB6217500E5E7FC /* Build configuration list for PBXNativeTarget "DaysToGoWidgetExtension" */;
+			buildPhases = (
+				5C2986E12EB6217400E5E7FC /* Sources */,
+				5C2986E22EB6217400E5E7FC /* Frameworks */,
+				5C2986E32EB6217400E5E7FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5CEDE2CE2EB76B15002D66CA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5C2986EB2EB6217400E5E7FC /* DaysToGoWidget */,
+			);
+			name = DaysToGoWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = DaysToGoWidgetExtension;
+			productReference = 5C2986E52EB6217400E5E7FC /* DaysToGoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		5C4182CE2E2E7F6C002814DC /* DaysToGo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5C4182F02E2E7F6E002814DC /* Build configuration list for PBXNativeTarget "DaysToGo" */;
@@ -115,10 +292,14 @@
 				5C4182CB2E2E7F6C002814DC /* Sources */,
 				5C4182CC2E2E7F6C002814DC /* Frameworks */,
 				5C4182CD2E2E7F6C002814DC /* Resources */,
+				5C2986FE2EB6217500E5E7FC /* Embed Foundation Extensions */,
+				5CEDE2C32EB76A3C002D66CA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				5C2986F82EB6217500E5E7FC /* PBXTargetDependency */,
+				5CEDE2BD2EB76A3C002D66CA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				5C4182D12E2E7F6C002814DC /* DaysToGo */,
@@ -176,6 +357,53 @@
 			productReference = 5C4182E62E2E7F6D002814DC /* DaysToGoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		5CEDE2A82EB76A3C002D66CA /* DaysToGoKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5CEDE2C02EB76A3C002D66CA /* Build configuration list for PBXNativeTarget "DaysToGoKit" */;
+			buildPhases = (
+				5CEDE2A42EB76A3C002D66CA /* Headers */,
+				5CEDE2A52EB76A3C002D66CA /* Sources */,
+				5CEDE2A62EB76A3C002D66CA /* Frameworks */,
+				5CEDE2A72EB76A3C002D66CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5CEDE2AA2EB76A3C002D66CA /* DaysToGoKit */,
+			);
+			name = DaysToGoKit;
+			packageProductDependencies = (
+			);
+			productName = DaysToGoKit;
+			productReference = 5CEDE2A92EB76A3C002D66CA /* DaysToGoKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5CEDE2B22EB76A3C002D66CA /* DaysToGoKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5CEDE2C42EB76A3C002D66CA /* Build configuration list for PBXNativeTarget "DaysToGoKitTests" */;
+			buildPhases = (
+				5CEDE2AF2EB76A3C002D66CA /* Sources */,
+				5CEDE2B02EB76A3C002D66CA /* Frameworks */,
+				5CEDE2B12EB76A3C002D66CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5CEDE2B62EB76A3C002D66CA /* PBXTargetDependency */,
+				5CEDE2B82EB76A3C002D66CA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5CEDE2B92EB76A3C002D66CA /* DaysToGoKitTests */,
+			);
+			name = DaysToGoKitTests;
+			packageProductDependencies = (
+			);
+			productName = DaysToGoKitTests;
+			productReference = 5CEDE2B32EB76A3C002D66CA /* DaysToGoKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -183,9 +411,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
+					5C2986E42EB6217400E5E7FC = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
 					5C4182CE2E2E7F6C002814DC = {
 						CreatedOnToolsVersion = 16.4;
 					};
@@ -195,6 +426,13 @@
 					};
 					5C4182E52E2E7F6D002814DC = {
 						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 5C4182CE2E2E7F6C002814DC;
+					};
+					5CEDE2A82EB76A3C002D66CA = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					5CEDE2B22EB76A3C002D66CA = {
+						CreatedOnToolsVersion = 26.0.1;
 						TestTargetID = 5C4182CE2E2E7F6C002814DC;
 					};
 				};
@@ -216,11 +454,21 @@
 				5C4182CE2E2E7F6C002814DC /* DaysToGo */,
 				5C4182DB2E2E7F6D002814DC /* DaysToGoTests */,
 				5C4182E52E2E7F6D002814DC /* DaysToGoUITests */,
+				5C2986E42EB6217400E5E7FC /* DaysToGoWidgetExtension */,
+				5CEDE2A82EB76A3C002D66CA /* DaysToGoKit */,
+				5CEDE2B22EB76A3C002D66CA /* DaysToGoKitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5C2986E32EB6217400E5E7FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5C4182CD2E2E7F6C002814DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -242,9 +490,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5CEDE2A72EB76A3C002D66CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5CEDE2B12EB76A3C002D66CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5C2986E12EB6217400E5E7FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5C4182CB2E2E7F6C002814DC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -266,9 +535,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5CEDE2A52EB76A3C002D66CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5CEDE2AF2EB76A3C002D66CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5C2986F82EB6217500E5E7FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5C2986E42EB6217400E5E7FC /* DaysToGoWidgetExtension */;
+			targetProxy = 5C2986F72EB6217500E5E7FC /* PBXContainerItemProxy */;
+		};
 		5C4182DE2E2E7F6D002814DC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5C4182CE2E2E7F6C002814DC /* DaysToGo */;
@@ -279,9 +567,93 @@
 			target = 5C4182CE2E2E7F6C002814DC /* DaysToGo */;
 			targetProxy = 5C4182E72E2E7F6D002814DC /* PBXContainerItemProxy */;
 		};
+		5CEDE2B62EB76A3C002D66CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CEDE2A82EB76A3C002D66CA /* DaysToGoKit */;
+			targetProxy = 5CEDE2B52EB76A3C002D66CA /* PBXContainerItemProxy */;
+		};
+		5CEDE2B82EB76A3C002D66CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5C4182CE2E2E7F6C002814DC /* DaysToGo */;
+			targetProxy = 5CEDE2B72EB76A3C002D66CA /* PBXContainerItemProxy */;
+		};
+		5CEDE2BD2EB76A3C002D66CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CEDE2A82EB76A3C002D66CA /* DaysToGoKit */;
+			targetProxy = 5CEDE2BC2EB76A3C002D66CA /* PBXContainerItemProxy */;
+		};
+		5CEDE2CE2EB76B15002D66CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CEDE2A82EB76A3C002D66CA /* DaysToGoKit */;
+			targetProxy = 5CEDE2CD2EB76B15002D66CA /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		5C2986FB2EB6217500E5E7FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = DaysToGoWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAGN44WV6Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DaysToGoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DaysToGoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wright.DaysToGo.DaysToGoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5C2986FC2EB6217500E5E7FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = DaysToGoWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAGN44WV6Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DaysToGoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DaysToGoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wright.DaysToGo.DaysToGoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		5C4182EE2E2E7F6E002814DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -340,6 +712,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -396,6 +769,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -406,6 +780,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DaysToGo/DaysToGo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VAGN44WV6Q;
@@ -435,6 +810,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DaysToGo/DaysToGo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VAGN44WV6Q;
@@ -527,9 +903,136 @@
 			};
 			name = Release;
 		};
+		5CEDE2C12EB76A3C002D66CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAGN44WV6Q;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = wright.DaysToGoKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		5CEDE2C22EB76A3C002D66CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAGN44WV6Q;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = wright.DaysToGoKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5CEDE2C52EB76A3C002D66CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wright.DaysToGoKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DaysToGo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DaysToGo";
+			};
+			name = Debug;
+		};
+		5CEDE2C62EB76A3C002D66CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wright.DaysToGoKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DaysToGo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DaysToGo";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5C2986FA2EB6217500E5E7FC /* Build configuration list for PBXNativeTarget "DaysToGoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5C2986FB2EB6217500E5E7FC /* Debug */,
+				5C2986FC2EB6217500E5E7FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		5C4182CA2E2E7F6C002814DC /* Build configuration list for PBXProject "DaysToGo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -562,6 +1065,24 @@
 			buildConfigurations = (
 				5C4182F72E2E7F6E002814DC /* Debug */,
 				5C4182F82E2E7F6E002814DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5CEDE2C02EB76A3C002D66CA /* Build configuration list for PBXNativeTarget "DaysToGoKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CEDE2C12EB76A3C002D66CA /* Debug */,
+				5CEDE2C22EB76A3C002D66CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5CEDE2C42EB76A3C002D66CA /* Build configuration list for PBXNativeTarget "DaysToGoKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CEDE2C52EB76A3C002D66CA /* Debug */,
+				5CEDE2C62EB76A3C002D66CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,0 +1,19 @@
+# SwiftLint configuration file
+# For more information, see https://github.com/realm/SwiftLint
+
+included:
+  - DaysToGo
+  - DaysToGoTests
+
+disabled_rules:
+  - line_length
+  - trailing_whitespace
+
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - vertical_whitespace_closing_braces
+
+custom_rules:
+  force_unwrapping:
+    severity: error

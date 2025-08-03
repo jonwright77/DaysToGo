@@ -5,8 +5,10 @@
 //  Created by Jon Wright on 23/07/2025.
 //
 
-
 import SwiftUI
+import DaysToGoKit
+
+// MARK: - Reminder Tile View
 
 struct ReminderTile: View {
     let reminder: Reminder
@@ -27,13 +29,13 @@ struct ReminderTile: View {
     var body: some View {
         VStack(spacing: 8) {
             Text(reminder.title)
-                .font(.headline)
+                .font(.title2)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
 
             Text(reminder.date, style: .date)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.headline)
+                .foregroundColor(.primary)
 
             Text("\(reminder.daysRemaining) day\(reminder.daysRemaining == 1 ? "" : "s") left")
                 .font(.title2)
@@ -42,13 +44,14 @@ struct ReminderTile: View {
         }
         .padding()
         .frame(maxWidth: .infinity, minHeight: 120)
-        .background(Color(.systemGray6))
+        .background(colorFromString(reminder.backgroundColor) ?? Color(.systemGray6))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(borderColor, lineWidth: borderColor == .clear ? 0 : 3)
         )
         .cornerRadius(12)
         .shadow(radius: 2)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(reminder.title), \(reminder.date.formatted(date: .long, time: .omitted)), \(reminder.daysRemaining) days left")
     }
 }
-

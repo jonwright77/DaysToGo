@@ -1,12 +1,24 @@
 import SwiftUI
 import EventKit
+import DaysToGoKit
 
 struct SettingsView: View {
     @ObservedObject var calendarPrefs: CalendarPreferences
     @State private var calendars: [EKCalendar] = []
+    @State private var alertError: AppError?
+
+    private let calendarService: any CalendarFetching
+
+    init(
+        calendarPrefs: CalendarPreferences,
+        calendarService: (any CalendarFetching)? = nil
+    ) {
+        self.calendarPrefs = calendarPrefs
+        self.calendarService = calendarService ?? ServiceContainer.shared.calendarService
+    }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 if calendars.isEmpty {
                     Text("No calendars found.")
@@ -15,48 +27,46 @@ struct SettingsView: View {
                     ForEach(calendars, id: \.calendarIdentifier) { calendar in
                         Toggle(calendar.title, isOn: Binding(
                             get: { calendarPrefs.isEnabled(calendar) },
-                            set: { newValue in
-                                if newValue {
-                                    calendarPrefs.enabledCalendarIDs.insert(calendar.calendarIdentifier)
-                                } else {
-                                    calendarPrefs.enabledCalendarIDs.remove(calendar.calendarIdentifier)
-                                }
-                            }
+                            set: { _ in calendarPrefs.toggle(calendar) }
                         ))
+                        .toggleStyle(SwitchToggleStyle(tint: .accentColor))
                     }
                 }
             }
             .navigationTitle("Select Calendars")
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 Task {
-                    await requestCalendarAccess()
+                    await loadCalendars()
+                }
+            }
+            .alert(isPresented: $alertError.isPresent, error: alertError) { error in
+                Button("OK") {
+                    alertError = nil
+                }
+                if error.shouldShowSettingsButton {
+                    Button("Open Settings") {
+                        alertError = nil
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                }
+            } message: { error in
+                if let suggestion = error.recoverySuggestion {
+                    Text(suggestion)
                 }
             }
         }
     }
 
-    // MARK: - Access + Load
-    private func requestCalendarAccess() async {
-        let store = EKEventStore()
-
-        if #available(iOS 17.0, *) {
-            do {
-                try await store.requestFullAccessToEvents()
-                await MainActor.run {
-                    calendars = store.calendars(for: .event)
-                }
-            } catch {
-                // You can show a UI alert here if needed
-                print("Calendar access denied: \(error)")
-            }
-        } else {
-            store.requestAccess(to: .event) { granted, _ in
-                if granted {
-                    DispatchQueue.main.async {
-                        calendars = store.calendars(for: .event)
-                    }
-                }
-            }
+    private func loadCalendars() async {
+        do {
+            calendars = try await calendarService.fetchCalendars()
+        } catch let error as AppError {
+            self.alertError = error
+        } catch {
+            self.alertError = .underlying(error)
         }
     }
 }

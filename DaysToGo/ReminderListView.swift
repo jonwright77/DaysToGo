@@ -1,12 +1,20 @@
 import SwiftUI
+import DaysToGoKit
 
 struct ReminderListView: View {
     @EnvironmentObject var calendarPrefs: CalendarPreferences
+    
+    @StateObject private var viewModel: ReminderListViewModel
+    private let reminderStore: ReminderStore
 
-    @StateObject private var store = ReminderStore()
     @State private var showingAddReminder = false
     @State private var showingSettings = false
     @State private var didAnimate = false
+
+    init(reminderStore: ReminderStore) {
+        self.reminderStore = reminderStore
+        _viewModel = StateObject(wrappedValue: ReminderListViewModel(reminderStore: reminderStore))
+    }
 
     var body: some View {
         NavigationView {
@@ -20,7 +28,7 @@ struct ReminderListView: View {
                         .bold()
                         .padding(.horizontal)
 
-                    if store.reminders.isEmpty {
+                    if viewModel.reminders.isEmpty {
                         Spacer()
                         VStack(spacing: 16) {
                             Image(systemName: "calendar.badge.exclamationmark")
@@ -33,9 +41,9 @@ struct ReminderListView: View {
                         Spacer()
                     } else {
                         ScrollView {
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160))], spacing: 16) {
-                                ForEach(store.reminders.sorted(by: { $0.date < $1.date })) { reminder in
-                                    NavigationLink(destination: ReminderDetailView(reminder: reminder, store: store)) {
+                            LazyVStack(spacing: 16) {
+                                ForEach(viewModel.reminders.sorted(by: { $0.date < $1.date })) { reminder in
+                                    NavigationLink(destination: ReminderDetailView(reminder: reminder, store: reminderStore)) {
                                         ReminderTile(reminder: reminder)
                                             .scaleEffect(didAnimate ? 1.0 : 0.95)
                                             .opacity(didAnimate ? 1.0 : 0)
@@ -49,7 +57,6 @@ struct ReminderListView: View {
                     }
                 }
             }
-            .navigationTitle("Reminders")
             .toolbar {
                 // ⚙️ Settings Button (left)
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -58,6 +65,7 @@ struct ReminderListView: View {
                     }) {
                         Image(systemName: "gearshape")
                     }
+                    .accessibilityLabel("Settings")
                 }
 
                 // ➕ Add Reminder (right)
@@ -67,18 +75,19 @@ struct ReminderListView: View {
                     }) {
                         Label("Add Reminder", systemImage: "plus")
                     }
+                    .accessibilityLabel("Add new reminder")
                 }
             }
             .sheet(isPresented: $showingAddReminder) {
                 AddReminderView { newReminder in
-                    store.addReminder(newReminder)
+                    viewModel.addReminder(newReminder)
                 }
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView(calendarPrefs: calendarPrefs)
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + AnimationTiming.listAnimationDelay) {
                     didAnimate = true
                 }
             }

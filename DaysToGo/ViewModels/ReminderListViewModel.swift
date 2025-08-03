@@ -1,0 +1,37 @@
+//
+//  ReminderListViewModel.swift
+//  DaysToGo
+//
+//  Created by Jon Wright on 01/11/2025.
+//
+
+import Foundation
+import Combine
+import DaysToGoKit
+
+@MainActor
+class ReminderListViewModel: ObservableObject {
+    @Published var reminders: [Reminder] = []
+    
+    private let reminderStore: any ReminderStoring
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(reminderStore: any ReminderStoring) {
+        self.reminderStore = reminderStore
+        self.reminders = reminderStore.reminders
+        subscribeToStoreChanges(store: reminderStore)
+    }
+    
+    private func subscribeToStoreChanges<S: ReminderStoring>(store: S) {
+        store.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.reminders = self?.reminderStore.reminders ?? []
+            }
+            .store(in: &cancellables)
+    }
+    
+    func addReminder(_ reminder: Reminder) {
+        reminderStore.addReminder(reminder)
+    }
+}
