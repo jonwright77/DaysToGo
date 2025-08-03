@@ -33,16 +33,15 @@ struct ReminderDetailView: View {
     @State private var reflectionPhotos: [UIImage] = []
     @State private var calendarEvents: [CalendarEventViewModel] = []
     @State private var calendarStatuses: [CalendarStatus] = []
+    @State private var selectedImage: UIImage?
 
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Title
                 Text(reminder.title)
                     .font(.title)
                     .bold()
 
-                // Date Range
                 if let reflectionDate = reminder.reflectionDate {
                     HStack {
                         Text(reflectionDate.formatted(date: .long, time: .omitted))
@@ -58,7 +57,6 @@ struct ReminderDetailView: View {
 
                 Divider()
 
-                // Reflection Photos
                 if !reflectionPhotos.isEmpty {
                     LazyVGrid(columns: [GridItem(), GridItem()], spacing: 8) {
                         ForEach(reflectionPhotos, id: \.self) { image in
@@ -68,6 +66,9 @@ struct ReminderDetailView: View {
                                 .frame(width: 160, height: 160)
                                 .clipped()
                                 .cornerRadius(8)
+                                .onTapGesture {
+                                    selectedImage = image
+                                }
                         }
                     }
                     .padding(.top)
@@ -79,7 +80,6 @@ struct ReminderDetailView: View {
 
                 Divider()
 
-                // Calendar Events
                 if !calendarEvents.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(calendarEvents) { event in
@@ -107,7 +107,6 @@ struct ReminderDetailView: View {
 
                 Spacer()
 
-                // Actions
                 HStack(spacing: 30) {
                     Button("Edit") {
                         showingEdit = true
@@ -126,6 +125,27 @@ struct ReminderDetailView: View {
             .padding()
         }
         .navigationTitle("Reminder Details")
+        .sheet(isPresented: Binding(
+            get: { selectedImage != nil },
+            set: { newValue in
+                if !newValue {
+                    selectedImage = nil
+                }
+            }
+        )) {
+            if let image = selectedImage {
+                ZStack {
+                    Color.black.ignoresSafeArea()
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .background(Color.black)
+                        .onTapGesture {
+                            selectedImage = nil
+                        }
+                }
+            }
+        }
         .sheet(isPresented: $showingEdit) {
             EditReminderView(reminder: $reminder) { updated in
                 if let index = store.reminders.firstIndex(where: { $0.id == reminder.id }) {
