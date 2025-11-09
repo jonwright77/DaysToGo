@@ -78,22 +78,22 @@ class MockCalendarService: CalendarFetching {
     }
 }
 
-class MockNewsService: NewsFetching {
+class MockHistoryService: HistoricalEventFetching {
     var shouldThrowError = false
-    var headlinesToReturn: [NewsHeadline] = []
+    var eventsToReturn: [HistoricalEvent] = []
 
-    func fetchHeadlines(from date: Date, maxCount: Int) async throws -> [NewsHeadline] {
+    func fetchEvents(from date: Date, maxCount: Int) async throws -> [HistoricalEvent] {
         if shouldThrowError {
-            throw AppError.underlying(NSError(domain: "NewsFetchError", code: 1))
+            throw AppError.underlying(NSError(domain: "HistoryFetchError", code: 1))
         }
-        return headlinesToReturn
+        return eventsToReturn
     }
 
-    func enhanceWithAI(_ headlines: [NewsHeadline]) async -> [NewsHeadline] {
+    func enhanceWithAI(_ events: [HistoricalEvent]) async -> [HistoricalEvent] {
         // Mock AI enhancement - just add a simple summary
-        return headlines.map { headline in
-            var enhanced = headline
-            enhanced.aiSummary = "AI Summary: \(headline.title)"
+        return events.map { event in
+            var enhanced = event
+            enhanced.aiSummary = "In \(event.year), \(event.text.lowercased())"
             return enhanced
         }
     }

@@ -71,21 +71,21 @@ public protocol CalendarFetching {
     func fetchEvents(from date: Date, in calendars: [EKCalendar]) async throws -> [EKEvent]
 }
 
-// MARK: - News Service Protocol
+// MARK: - Historical Event Service Protocol
 
-/// Protocol for fetching news headlines from a specific date.
-public protocol NewsFetching {
-    /// Fetches news headlines from a specific date.
+/// Protocol for fetching historical events from Wikipedia's "On This Day" feature.
+public protocol HistoricalEventFetching {
+    /// Fetches historical events from a specific date.
     /// - Parameters:
-    ///   - date: The date to fetch news headlines from.
-    ///   - maxCount: Maximum number of headlines to return (default: 5).
-    /// - Returns: An array of NewsHeadline objects.
+    ///   - date: The date to fetch historical events from.
+    ///   - maxCount: Maximum number of events to return (default: 10).
+    /// - Returns: An array of HistoricalEvent objects.
     /// - Throws: `AppError` if the operation fails (network, API error, etc.).
-    func fetchHeadlines(from date: Date, maxCount: Int) async throws -> [NewsHeadline]
+    func fetchEvents(from date: Date, maxCount: Int) async throws -> [HistoricalEvent]
 
-    /// Enhances headlines with AI-generated summaries (iOS 18+ only).
-    /// - Parameter headlines: The headlines to enhance.
-    /// - Returns: Headlines with AI summaries added (where available).
-    /// - Note: On devices without Apple Intelligence, returns headlines unchanged.
-    func enhanceWithAI(_ headlines: [NewsHeadline]) async -> [NewsHeadline]
+    /// Enhances events with AI-generated summaries (iOS 18+ only).
+    /// - Parameter events: The events to enhance.
+    /// - Returns: Events with AI summaries added (where available).
+    /// - Note: On devices without Apple Intelligence, returns events unchanged.
+    func enhanceWithAI(_ events: [HistoricalEvent]) async -> [HistoricalEvent]
 }

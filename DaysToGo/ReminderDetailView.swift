@@ -120,37 +120,44 @@ struct ReminderDetailView: View {
 
                 Divider()
 
-                // News Headlines Section
-                if viewModel.isLoadingNews {
+                // Historical Events Section
+                if viewModel.isLoadingHistory {
                     ProgressView()
                         .padding()
-                } else if !viewModel.newsHeadlines.isEmpty {
+                } else if !viewModel.historicalEvents.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("📰 News Headlines")
+                        Text("📅 On This Day in History")
                             .font(.headline)
                             .padding(.horizontal)
 
-                        ForEach(viewModel.newsHeadlines) { headline in
+                        ForEach(viewModel.historicalEvents) { event in
                             VStack(alignment: .leading, spacing: 6) {
-                                Text(headline.title)
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
+                                HStack {
+                                    Text(String(event.year))
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.accentColor)
 
-                                Text(headline.source)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    Image(systemName: event.eventType.icon)
+                                        .foregroundColor(.secondary)
+                                        .font(.caption)
+                                }
+
+                                Text(event.text)
+                                    .font(.subheadline)
 
                                 // Show AI summary if available (iOS 18+)
-                                if let aiSummary = headline.aiSummary {
+                                if let aiSummary = event.aiSummary {
                                     Text(aiSummary)
                                         .font(.caption)
                                         .foregroundColor(.blue)
                                         .italic()
+                                        .padding(.top, 2)
                                 }
 
-                                // Show link if available
-                                if let url = headline.url {
-                                    Link("Read more →", destination: url)
+                                // Show Wikipedia link if available
+                                if let url = event.url {
+                                    Link("Read on Wikipedia →", destination: url)
                                         .font(.caption)
                                         .foregroundColor(.accentColor)
                                 }
@@ -160,16 +167,16 @@ struct ReminderDetailView: View {
                             .background(Color(.systemGray6))
                             .cornerRadius(8)
                             .accessibilityElement(children: .combine)
-                            .accessibilityLabel("\(headline.title) from \(headline.source)")
+                            .accessibilityLabel("\(event.year): \(event.text)")
                         }
                     }
                     .padding(.horizontal)
                 } else if let reflectionDate = viewModel.reminder.reflectionDate {
                     VStack {
-                        Image(systemName: "newspaper")
+                        Image(systemName: "calendar.badge.clock")
                             .font(.largeTitle)
                             .foregroundColor(.secondary)
-                        Text("No News Headlines for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                        Text("No Historical Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
                             .foregroundColor(.secondary)
                     }
                     .padding()

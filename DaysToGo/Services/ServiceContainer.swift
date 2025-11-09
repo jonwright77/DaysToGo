@@ -39,24 +39,24 @@ class ServiceContainer {
     /// Service for reminder storage and synchronization.
     let reminderStore: any ReminderStoring
 
-    /// Service for fetching news headlines.
-    let newsService: any NewsFetching
+    /// Service for fetching historical events from Wikipedia.
+    let historyService: any HistoricalEventFetching
 
     /// Initializes a new service container with specified or default services.
     /// - Parameters:
     ///   - photoService: The photo service to use. Defaults to `PhotoService()`.
     ///   - calendarService: The calendar service to use. Defaults to `CalendarService()`.
     ///   - reminderStore: The reminder store to use. Defaults to `ReminderStore()`.
-    ///   - newsService: The news service to use. Defaults to `NewsService()`.
+    ///   - historyService: The historical event service to use. Defaults to `WikipediaService()`.
     init(
         photoService: any PhotoFetching = PhotoService(),
         calendarService: any CalendarFetching = CalendarService(),
         reminderStore: any ReminderStoring = ReminderStore(),
-        newsService: any NewsFetching = NewsService()
+        historyService: any HistoricalEventFetching = WikipediaService()
     ) {
         self.photoService = photoService
         self.calendarService = calendarService
         self.reminderStore = reminderStore
-        self.newsService = newsService
+        self.historyService = historyService
     }
 }
