@@ -1,72 +1,55 @@
 import SwiftUI
-import EventKit
 import DaysToGoKit
 
 struct SettingsView: View {
     @ObservedObject var calendarPrefs: CalendarPreferences
-    @State private var calendars: [EKCalendar] = []
-    @State private var alertError: AppError?
-
-    private let calendarService: any CalendarFetching
-
-    init(
-        calendarPrefs: CalendarPreferences,
-        calendarService: (any CalendarFetching)? = nil
-    ) {
-        self.calendarPrefs = calendarPrefs
-        self.calendarService = calendarService ?? ServiceContainer.shared.calendarService
-    }
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
             List {
-                if calendars.isEmpty {
-                    Text("No calendars found.")
-                        .foregroundColor(.secondary)
-                } else {
-                    ForEach(calendars, id: \.calendarIdentifier) { calendar in
-                        Toggle(calendar.title, isOn: Binding(
-                            get: { calendarPrefs.isEnabled(calendar) },
-                            set: { _ in calendarPrefs.toggle(calendar) }
-                        ))
-                        .toggleStyle(SwitchToggleStyle(tint: .accentColor))
-                    }
-                }
-            }
-            .navigationTitle("Select Calendars")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                Task {
-                    await loadCalendars()
-                }
-            }
-            .alert(isPresented: $alertError.isPresent, error: alertError) { error in
-                Button("OK") {
-                    alertError = nil
-                }
-                if error.shouldShowSettingsButton {
-                    Button("Open Settings") {
-                        alertError = nil
-                        if let url = URL(string: UIApplication.openSettingsURLString) {
-                            UIApplication.shared.open(url)
+                Section {
+                    NavigationLink(destination: CalendarSettingsView(calendarPrefs: calendarPrefs)) {
+                        HStack {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.accentColor)
+                                .frame(width: 28)
+                            Text("Calendars")
                         }
                     }
+                } header: {
+                    Text("Data Sources")
                 }
-            } message: { error in
-                if let suggestion = error.recoverySuggestion {
-                    Text(suggestion)
+
+                Section {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.accentColor)
+                            .frame(width: 28)
+                        Text("Version")
+                        Spacer()
+                        Text(appVersion)
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
+                    Text("About")
+                }
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
                 }
             }
         }
     }
 
-    private func loadCalendars() async {
-        do {
-            calendars = try await calendarService.fetchCalendars()
-        } catch let error as AppError {
-            self.alertError = error
-        } catch {
-            self.alertError = .underlying(error)
-        }
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+        return "\(version) (\(build))"
     }
 }

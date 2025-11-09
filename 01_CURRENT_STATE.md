@@ -7,10 +7,10 @@
 - **Third-Party Dependencies**: There are no third-party dependencies evident from the project structure or `project.pbxproj` file.
 - **App Architecture**: The architecture has been refactored to a clean **MVVM (Model-View-ViewModel)** pattern with Dependency Injection.
     - **ViewModels**: `ReminderListViewModel` and `ReminderDetailViewModel` now contain the business logic and state management for their respective views.
-    - **Services**: Service protocols (`PhotoFetching`, `CalendarFetching`, `ReminderStoring`) are defined in `DaysToGoKit/Protocols.swift` with comprehensive documentation. Concrete services (`PhotoService`, `CalendarService`, `ReminderStore`) implement these protocols.
+    - **Services**: Service protocols (`PhotoFetching`, `CalendarFetching`, `ReminderStoring`, `HistoricalEventFetching`) are defined in `DaysToGoKit/Protocols.swift` with comprehensive documentation. Concrete services (`PhotoService`, `CalendarService`, `ReminderStore`, `WikipediaService`) implement these protocols.
     - **Dependency Injection**: A centralized `ServiceContainer` class manages all service dependencies. Services can be injected via the container's shared instance or through custom instances for testing. ViewModels provide convenience initializers that use the service container by default.
 - **Data Model & Persistence**:
-    - The primary data models are the `Reminder` and `CalendarEventViewModel` structs.
+    - The primary data models are the `Reminder`, `CalendarEventViewModel`, and `HistoricalEvent` structs.
     - The `Reminder` model includes a `modifiedAt` timestamp property used for conflict resolution during sync operations.
     - **Persistence is handled by a hybrid approach**: Reminders are saved immediately to a local JSON file within a **shared App Group container** for quick access and offline support. These local changes are then asynchronously synchronized with **CloudKit** for iCloud synchronization across devices.
     - **CloudKit Sync Strategy**: The app uses intelligent merge logic that compares local and cloud reminders by modification timestamp, uploads local-only changes, downloads new cloud reminders, and resolves conflicts by choosing the most recently modified version. This prevents data loss during offline/online transitions.
@@ -30,6 +30,7 @@
     - **Past-Date Logic**: A `reflectionDate` computed property calculates the date in the past corresponding to the "days remaining" count.
     - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the calculated `reflectionDate`.
     - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
+    - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, deaths, and holidays from throughout history. No API key required, completely free with unlimited access.
     - **Settings**: A `SettingsView` allows users to select which calendars to fetch events from.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
     - **Splash Screen**: A custom splash screen is displayed on app launch.

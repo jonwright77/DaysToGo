@@ -286,12 +286,12 @@ After completing Phase 9, several UI issues were discovered and resolved:
 
 All three phases (7, 8, and 9) plus post-release bug fixes are now complete. The codebase has a robust foundation with proper data synchronization, consistent threading, structured logging, centralized constants, well-organized protocols, dependency injection, intelligent error handling, minimal code duplication, full Swift 6 concurrency compliance, performance optimizations, enhanced user experience, and reliable error alert management. The architecture is production-ready and future-proof.
 
-## Completed (Phase 10) - News Headlines Feature
+## Completed (Phase 10) - News Headlines Feature [REPLACED IN PHASE 11]
 
-This phase added news headlines functionality to show relevant news from reflection dates.
+This phase added news headlines functionality to show relevant news from reflection dates. **Note: This implementation was replaced in Phase 11 with a free Wikipedia-based solution due to cost concerns ($449/month for NewsAPI.org).**
 
 1. **News Headlines Integration with Apple Intelligence**
-   - **Status**: ✅ Completed
+   - **Status**: ✅ Completed (Later replaced with Wikipedia in Phase 11)
    - **Summary**: Integrated NewsAPI.org to fetch historical news headlines from reflection dates. Added Apple Intelligence enhancement for iOS 18+ devices to provide AI-generated summaries. Implemented complete service architecture following existing patterns (NewsHeadline model, NewsFetching protocol, NewsService implementation).
    - **Implementation Details**:
      - Created `NewsHeadline` model in DaysToGoKit with support for title, description, source, publishedAt, url, imageUrl, and optional aiSummary
@@ -313,6 +313,49 @@ This phase added news headlines functionality to show relevant news from reflect
      - iOS 18+ users see AI-enhanced summaries automatically
      - Older devices show headlines without summaries
      - Graceful degradation when API key not configured or date out of range
-   - **Files**:
+   - **Files**: (All removed in Phase 11)
      - New: `DaysToGoKit/NewsHeadline.swift`, `DaysToGo/Services/NewsService.swift`, `DaysToGo/Config.plist.template`, `NEWS_API_SETUP.md`, `.gitignore`
      - Modified: `DaysToGoKit/Protocols.swift`, `DaysToGo/Services/ServiceContainer.swift`, `DaysToGo/ViewModels/ReminderDetailViewModel.swift`, `DaysToGo/ReminderDetailView.swift`, `DaysToGoTests/Mocks/MockServices.swift`
+
+## Completed (Phase 11) - Wikipedia "On This Day" Migration
+
+This phase replaced the expensive NewsAPI.org integration with Wikipedia's free "On This Day" feature, providing a cost-effective and more historically rich alternative.
+
+1. **Wikipedia Historical Events Integration**
+   - **Status**: ✅ Completed
+   - **Summary**: Replaced NewsAPI.org ($449/month for historical data) with Wikipedia's completely free "On This Day" API. The new implementation provides unlimited access to historical events spanning all of human history, eliminating API costs and date range limitations while enhancing the user experience with timeless historical content.
+   - **Cost Savings**: $449/month → $0/month (100% free, no API key required)
+   - **Data Range**: 30 days (NewsAPI limitation) → All of history (Wikipedia advantage)
+   - **Rate Limits**: 100 requests/day → Unlimited reasonable usage
+   - **Implementation Details**:
+     - Created `HistoricalEvent` model in DaysToGoKit with year, text, eventType (event/birth/death/holiday/selected), url, imageUrl, and optional aiSummary
+     - Renamed protocol from `NewsFetching` to `HistoricalEventFetching` with methods `fetchEvents(from:maxCount:)` and `enhanceWithAI(_:)`
+     - Implemented `WikipediaService` using Wikipedia's REST API: `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/{MM}/{DD}`
+     - Service combines selected events, regular events, births, deaths, and holidays into unified list
+     - Events sorted by year (most recent first) and limited to configurable count (default 10)
+     - Retained Apple Intelligence AI enhancement for iOS 18+ devices
+     - Updated ServiceContainer to inject `WikipediaService` as `historyService`
+     - Updated ReminderDetailViewModel to use `historicalEvents` and `isLoadingHistory` properties
+     - Enhanced ReminderDetailView UI with new "📅 On This Day in History" section showing year prominently, event type icons, and Wikipedia links
+     - Updated MockHistoryService for unit testing
+     - Removed all NewsAPI-related files and configuration
+   - **User Experience Improvements**:
+     - More engaging content: "1969 - Apollo 11 lands on the moon" vs. news from 30 days ago
+     - Works with any date in history, not just recent past
+     - Event categorization with visual icons (📅 events, 🎁 births, 🍂 deaths, ⭐ featured)
+     - Direct links to detailed Wikipedia articles
+     - No configuration required - works immediately
+     - Graceful silent failure if Wikipedia unavailable (non-critical feature)
+   - **Technical Benefits**:
+     - Zero ongoing costs
+     - No API key management
+     - No rate limit concerns
+     - No privacy/tracking concerns
+     - More reliable (Wikipedia's infrastructure)
+     - Better aligned with app's nostalgic/reflection theme
+   - **Files**:
+     - **New**: `DaysToGoKit/HistoricalEvent.swift`, `DaysToGo/Services/WikipediaService.swift`
+     - **Modified**: `DaysToGoKit/Protocols.swift`, `DaysToGo/Services/ServiceContainer.swift`, `DaysToGo/ViewModels/ReminderDetailViewModel.swift`, `DaysToGo/ReminderDetailView.swift`, `DaysToGoTests/Mocks/MockServices.swift`
+     - **Removed**: `DaysToGoKit/NewsHeadline.swift`, `DaysToGo/Services/NewsService.swift`, `DaysToGo/Config.plist`, `DaysToGo/Config.plist.template`, `NEWS_API_SETUP.md`
+
+All 11 phases are now complete. The app features a production-ready architecture with comprehensive functionality including iCloud sync, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof.
