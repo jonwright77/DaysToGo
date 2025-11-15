@@ -10,18 +10,23 @@
     - **Services**: Service protocols (`PhotoFetching`, `CalendarFetching`, `ReminderStoring`, `HistoricalEventFetching`) are defined in `DaysToGoKit/Protocols.swift` with comprehensive documentation. Concrete services (`PhotoService`, `CalendarService`, `ReminderStore`, `WikipediaService`) implement these protocols.
     - **Dependency Injection**: A centralized `ServiceContainer` class manages all service dependencies. Services can be injected via the container's shared instance or through custom instances for testing. ViewModels provide convenience initializers that use the service container by default.
 - **Data Model & Persistence**:
-    - The primary data models are the `Reminder`, `CalendarEventViewModel`, and `HistoricalEvent` structs.
+    - The primary data models are the `Reminder`, `CalendarEventViewModel`, `HistoricalEvent`, and `UserProfile` structs.
     - The `Reminder` model includes a `modifiedAt` timestamp property used for conflict resolution during sync operations.
+    - The `UserProfile` model stores user's name and location, with helper properties for personalization.
     - **Persistence is handled by a hybrid approach**: Reminders are saved immediately to a local JSON file within a **shared App Group container** for quick access and offline support. These local changes are then asynchronously synchronized with **CloudKit** for iCloud synchronization across devices.
     - **CloudKit Sync Strategy**: The app uses intelligent merge logic that compares local and cloud reminders by modification timestamp, uploads local-only changes, downloads new cloud reminders, and resolves conflicts by choosing the most recently modified version. This prevents data loss during offline/online transitions.
     - **Sync State Tracking**: `ReminderStore` publishes a `syncState` property (synced, syncing, offline, error) that tracks the current CloudKit synchronization status, providing visibility into network connectivity and sync issues.
+    - **User Profile Management**: `UserProfileStore` manages user profile data (name, location) via UserDefaults, with automatic persistence and onboarding status tracking.
     - Calendar preferences are stored in `UserDefaults` by `CalendarPreferences`.
     - All app-wide constants (App Group ID, widget kind, notification names) are centralized in `DaysToGoKit/Constants.swift`.
 
 ## Features Implemented vs. Intended
 
 - **Implemented**:
+    - **Onboarding Flow**: First-time users see a beautiful 3-page onboarding experience that collects name and location data. The onboarding uses a full-screen modal with smooth page transitions, validation, and proper completion tracking.
+    - **User Profile Management**: Users can view and edit their profile (name and location) through Settings → Profile. Profile data is persisted via UserDefaults and displayed throughout the app for personalization.
     - **iCloud Sync**: Reminders are automatically synced across devices using CloudKit.
+    - **Pull-to-Refresh**: Users can manually refresh the reminder list by pulling down, triggering a CloudKit sync with visual feedback.
     - **Home Screen Widget**: A widget is available to show upcoming reminders, fetching data from the **shared App Group container** for fast, offline-capable display. The widget includes data freshness validation and warns when data is stale (over 1 hour old).
     - **CRUD for Reminders**: Users can create, view, edit, and delete reminders.
     - **Reminder List**: `ReminderListView` displays reminders in a full-width list, sorted by date.
@@ -31,7 +36,7 @@
     - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the calculated `reflectionDate`.
     - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
     - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, deaths, and holidays from throughout history. No API key required, completely free with unlimited access.
-    - **Settings**: A `SettingsView` allows users to select which calendars to fetch events from.
+    - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Calendars), plus app version information.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
     - **Splash Screen**: A custom splash screen is displayed on app launch.
 - **Gaps & TODOs**: 

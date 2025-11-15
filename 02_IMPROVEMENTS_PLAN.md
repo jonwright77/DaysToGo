@@ -358,4 +358,41 @@ This phase replaced the expensive NewsAPI.org integration with Wikipedia's free 
      - **Modified**: `DaysToGoKit/Protocols.swift`, `DaysToGo/Services/ServiceContainer.swift`, `DaysToGo/ViewModels/ReminderDetailViewModel.swift`, `DaysToGo/ReminderDetailView.swift`, `DaysToGoTests/Mocks/MockServices.swift`
      - **Removed**: `DaysToGoKit/NewsHeadline.swift`, `DaysToGo/Services/NewsService.swift`, `DaysToGo/Config.plist`, `DaysToGo/Config.plist.template`, `NEWS_API_SETUP.md`
 
-All 11 phases are now complete. The app features a production-ready architecture with comprehensive functionality including iCloud sync, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof.
+## Completed (Phase 12) - Onboarding & User Profile Management
+
+This phase added a first-launch onboarding experience and comprehensive user profile management system.
+
+1. **Onboarding & Profile System**
+   - **Status**: ✅ Completed
+   - **Summary**: Implemented a complete onboarding flow for first-time users to collect name and location data, with a hierarchical settings menu for profile management. The system provides personalization capabilities and sets the foundation for future user-specific features.
+   - **Implementation Details**:
+     - Created `UserProfile` model in DaysToGoKit with name, location, and helper properties (isIncomplete, greeting)
+     - Implemented `UserProfileStore` using UserDefaults for persistence with singleton pattern
+     - Built beautiful 3-page onboarding flow with TabView: Welcome → Name (required) → Location (optional)
+     - Added onboarding completion tracking and first-launch detection
+     - Created `ProfileSettingsView` for editing profile data anytime
+     - Restructured `SettingsView` with hierarchical sections: Personal (Profile) and Data Sources (Calendars)
+     - Integrated onboarding check in `DaysToGoApp` after splash screen
+     - Full-screen modal presentation with smooth animations and page indicators
+   - **User Experience**:
+     - First launch shows onboarding automatically after splash screen
+     - Name is required, location is optional
+     - Page-by-page navigation with validation
+     - Profile accessible anytime via Settings → Profile
+     - User's name displayed in Settings menu for quick reference
+     - Clean, modern UI with SF Symbols icons
+   - **Data Management**:
+     - Profile stored in UserDefaults as JSON
+     - Automatic persistence on changes
+     - Observable pattern for reactive UI updates
+     - Reset capability for testing/debugging
+   - **Settings Restructure**:
+     - Added "Personal" section with Profile option
+     - Moved Calendars to "Data Sources" section
+     - Retained "About" section with version info
+     - Hierarchical navigation for better organization
+   - **Files**:
+     - **New**: `DaysToGoKit/UserProfile.swift`, `DaysToGo/UserProfileStore.swift`, `DaysToGo/OnboardingView.swift`, `DaysToGo/ProfileSettingsView.swift`
+     - **Modified**: `DaysToGo/DaysToGoApp.swift`, `DaysToGo/SettingsView.swift`
+
+All 12 phases are now complete. The app features a production-ready architecture with comprehensive functionality including onboarding, user profiles, iCloud sync, pull-to-refresh, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof with excellent user experience.
