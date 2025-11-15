@@ -30,6 +30,10 @@ public protocol ReminderStoring: ObservableObject {
     /// Deletes a reminder from the store.
     /// - Parameter id: The unique identifier of the reminder to delete.
     func deleteReminder(withId id: UUID)
+
+    /// Refreshes reminders from the remote data source (CloudKit).
+    /// Use this for pull-to-refresh functionality.
+    func refresh() async
 }
 
 // MARK: - Photo Service Protocol

@@ -34,4 +34,10 @@ class ReminderListViewModel: ObservableObject {
     func addReminder(_ reminder: Reminder) {
         reminderStore.addReminder(reminder)
     }
+
+    /// Refreshes reminders from CloudKit.
+    /// Call this method for pull-to-refresh functionality.
+    func refresh() async {
+        await reminderStore.refresh()
+    }
 }

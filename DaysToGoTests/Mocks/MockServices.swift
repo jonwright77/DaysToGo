@@ -18,19 +18,23 @@ class MockReminderStore: ReminderStoring {
     init(reminders: [Reminder] = []) {
         self.reminders = reminders
     }
-    
+
     func addReminder(_ reminder: Reminder) {
         reminders.append(reminder)
     }
-    
+
     func updateReminder(_ reminder: Reminder) {
         if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
             reminders[index] = reminder
         }
     }
-    
+
     func deleteReminder(withId id: UUID) {
         reminders.removeAll { $0.id == id }
+    }
+
+    func refresh() async {
+        // Mock implementation - does nothing in tests
     }
 }
 

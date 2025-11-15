@@ -37,7 +37,9 @@ struct DaysToGoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var calendarPrefs = CalendarPreferences()
     @StateObject var reminderStore = ReminderStore()
+    @StateObject var profileStore = UserProfileStore.shared
     @State private var showSplash = true
+    @State private var showOnboarding = false
 
     var body: some Scene {
         WindowGroup {
@@ -49,14 +51,22 @@ struct DaysToGoApp: App {
                                 withAnimation {
                                     showSplash = false
                                 }
+                                // Check if onboarding is needed after splash
+                                showOnboarding = !profileStore.hasCompletedOnboarding
                             }
                         }
                 } else {
                     ReminderListView(reminderStore: reminderStore)
                         .environmentObject(calendarPrefs)
+                        .environmentObject(profileStore)
                         .onAppear(perform: requestNotificationPermission)
                         .onReceive(NotificationCenter.default.publisher(for: .remindersDidChange)) { _ in
                             WidgetCenter.shared.reloadTimelines(ofKind: AppConstants.widgetKind)
+                        }
+                        .fullScreenCover(isPresented: $showOnboarding) {
+                            OnboardingView(profileStore: profileStore) {
+                                showOnboarding = false
+                            }
                         }
                 }
             }

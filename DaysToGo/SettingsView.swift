@@ -3,11 +3,32 @@ import DaysToGoKit
 
 struct SettingsView: View {
     @ObservedObject var calendarPrefs: CalendarPreferences
+    @EnvironmentObject var profileStore: UserProfileStore
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    NavigationLink(destination: ProfileSettingsView(profileStore: profileStore)) {
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .foregroundColor(.accentColor)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Profile")
+                                if !profileStore.profile.name.isEmpty {
+                                    Text(profileStore.profile.name)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Personal")
+                }
+
                 Section {
                     NavigationLink(destination: CalendarSettingsView(calendarPrefs: calendarPrefs)) {
                         HStack {

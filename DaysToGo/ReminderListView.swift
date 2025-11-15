@@ -54,6 +54,9 @@ struct ReminderListView: View {
                             }
                             .padding()
                         }
+                        .refreshable {
+                            await viewModel.refresh()
+                        }
                     }
                 }
             }

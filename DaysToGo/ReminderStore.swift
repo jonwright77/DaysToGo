@@ -212,7 +212,13 @@ class ReminderStore: ReminderStoring, ObservableObject {
             }
         }
     }
-    
+
+    /// Refreshes reminders from CloudKit.
+    /// This is used for pull-to-refresh functionality.
+    func refresh() async {
+        await fetchReminders()
+    }
+
     // MARK: - Subscription
     
     private func subscribeToChanges() async {
