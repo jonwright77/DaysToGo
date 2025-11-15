@@ -43,9 +43,10 @@ class UserProfileStore: ObservableObject {
     }
 
     /// Updates the user profile
-    func updateProfile(name: String, location: String) {
-        profile.name = name
-        profile.location = location
+    func updateProfile(firstName: String, surname: String, country: String) {
+        profile.firstName = firstName
+        profile.surname = surname
+        profile.country = country
     }
 
     /// Checks if the user has completed onboarding

@@ -12,19 +12,19 @@
 - **Data Model & Persistence**:
     - The primary data models are the `Reminder`, `CalendarEventViewModel`, `HistoricalEvent`, and `UserProfile` structs.
     - The `Reminder` model includes a `modifiedAt` timestamp property used for conflict resolution during sync operations.
-    - The `UserProfile` model stores user's name and location, with helper properties for personalization.
+    - The `UserProfile` model stores user's firstName, surname, and country, with helper properties (fullName, greeting) for personalization.
     - **Persistence is handled by a hybrid approach**: Reminders are saved immediately to a local JSON file within a **shared App Group container** for quick access and offline support. These local changes are then asynchronously synchronized with **CloudKit** for iCloud synchronization across devices.
     - **CloudKit Sync Strategy**: The app uses intelligent merge logic that compares local and cloud reminders by modification timestamp, uploads local-only changes, downloads new cloud reminders, and resolves conflicts by choosing the most recently modified version. This prevents data loss during offline/online transitions.
     - **Sync State Tracking**: `ReminderStore` publishes a `syncState` property (synced, syncing, offline, error) that tracks the current CloudKit synchronization status, providing visibility into network connectivity and sync issues.
-    - **User Profile Management**: `UserProfileStore` manages user profile data (name, location) via UserDefaults, with automatic persistence and onboarding status tracking.
+    - **User Profile Management**: `UserProfileStore` manages user profile data (firstName, surname, country) via UserDefaults, with automatic persistence and onboarding status tracking.
     - Calendar preferences are stored in `UserDefaults` by `CalendarPreferences`.
     - All app-wide constants (App Group ID, widget kind, notification names) are centralized in `DaysToGoKit/Constants.swift`.
 
 ## Features Implemented vs. Intended
 
 - **Implemented**:
-    - **Onboarding Flow**: First-time users see a beautiful 3-page onboarding experience that collects name and location data. The onboarding uses a full-screen modal with smooth page transitions, validation, and proper completion tracking.
-    - **User Profile Management**: Users can view and edit their profile (name and location) through Settings → Profile. Profile data is persisted via UserDefaults and displayed throughout the app for personalization.
+    - **Onboarding Flow**: First-time users see a beautiful 3-page onboarding experience that collects firstName, surname, and country via structured inputs. Page 2 features separate text fields for first name (required) and surname (optional). Page 3 provides a wheel-style country picker with 40+ countries sorted alphabetically. The onboarding uses a full-screen modal with smooth page transitions, validation, and proper completion tracking.
+    - **User Profile Management**: Users can view and edit their profile (firstName, surname, country) through Settings → Profile. The profile form includes separate name fields and a country picker matching the onboarding experience. Profile data is persisted via UserDefaults and displayed throughout the app for personalization (fullName in Settings menu, firstName in greetings).
     - **iCloud Sync**: Reminders are automatically synced across devices using CloudKit.
     - **Pull-to-Refresh**: Users can manually refresh the reminder list by pulling down, triggering a CloudKit sync with visual feedback.
     - **Home Screen Widget**: A widget is available to show upcoming reminders, fetching data from the **shared App Group container** for fast, offline-capable display. The widget includes data freshness validation and warns when data is stale (over 1 hour old).

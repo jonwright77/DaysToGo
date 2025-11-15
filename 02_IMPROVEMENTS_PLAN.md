@@ -395,4 +395,63 @@ This phase added a first-launch onboarding experience and comprehensive user pro
      - **New**: `DaysToGoKit/UserProfile.swift`, `DaysToGo/UserProfileStore.swift`, `DaysToGo/OnboardingView.swift`, `DaysToGo/ProfileSettingsView.swift`
      - **Modified**: `DaysToGo/DaysToGoApp.swift`, `DaysToGo/SettingsView.swift`
 
-All 12 phases are now complete. The app features a production-ready architecture with comprehensive functionality including onboarding, user profiles, iCloud sync, pull-to-refresh, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof with excellent user experience.
+## Completed (Phase 13) - Enhanced Onboarding with Structured Data Collection
+
+This phase improved the onboarding experience with professional data collection patterns, replacing free-text fields with structured inputs for better data quality and user experience.
+
+1. **Structured Name & Country Collection**
+   - **Status**: ✅ Completed
+   - **Summary**: Enhanced onboarding to collect firstName and surname separately (instead of single "name" field) and replaced free-text location input with a country picker containing 40+ countries. This provides better data quality, eliminates typos, and follows professional form design patterns.
+   - **UserProfile Model Changes**:
+     - Replaced `name: String` with `firstName: String` and `surname: String`
+     - Replaced `location: String` with `country: String`
+     - Added `fullName` computed property returning "FirstName Surname"
+     - Updated `greeting` to use firstName only ("Hello, FirstName")
+     - Updated `isIncomplete` to check firstName (required field)
+   - **Onboarding Page 2 (Name Collection)**:
+     - Two separate text fields: "First Name" (required) and "Surname" (optional)
+     - Proper text content types for autocomplete (`.givenName`, `.familyName`)
+     - Validation requires firstName before proceeding
+     - Vertical stacking with clean spacing
+   - **Onboarding Page 3 (Country Selection)**:
+     - Replaced text field with wheel-style Picker
+     - 40+ countries including major nations from all continents
+     - Alphabetically sorted for easy selection
+     - "Other" option for unlisted countries
+     - Changed icon from map pin to globe
+     - Updated messaging: "Select your country"
+   - **Country List Coverage**:
+     - North America: USA, Canada, Mexico
+     - Europe: 15+ countries (UK, Germany, France, etc.)
+     - Asia: Japan, China, India, Singapore, etc.
+     - Oceania: Australia, New Zealand
+     - South America: Brazil, Argentina, Chile
+     - Africa: South Africa, Egypt, Nigeria, Kenya
+     - Middle East: UAE, Saudi Arabia, Israel, Turkey
+   - **ProfileSettingsView Updates**:
+     - Two separate name fields matching onboarding
+     - Country picker with same country list
+     - Each field tracks changes independently
+     - "Save Changes" button appears on edits
+     - Updated help text to reference "country" not "location"
+   - **UserProfileStore Updates**:
+     - `updateProfile()` signature changed to accept firstName, surname, country
+     - Maintains UserDefaults persistence
+     - Observable pattern for reactive UI updates
+   - **SettingsView Display**:
+     - Shows `fullName` (computed property) instead of raw name
+     - Displays "FirstName Surname" in subtitle
+     - Handles empty names gracefully
+   - **Benefits**:
+     - Better data quality (no spelling mistakes in countries)
+     - Professional UX (industry standard to split names)
+     - Structured data enables future features (localization, analytics)
+     - Faster input (picker vs typing country name)
+     - International-friendly approach
+   - **Data Format**:
+     - Old: `{"name": "John Doe", "location": "San Francisco"}`
+     - New: `{"firstName": "John", "surname": "Doe", "country": "United States"}`
+   - **Files**:
+     - **Modified**: `DaysToGoKit/UserProfile.swift`, `DaysToGo/UserProfileStore.swift`, `DaysToGo/OnboardingView.swift`, `DaysToGo/ProfileSettingsView.swift`, `DaysToGo/SettingsView.swift`
+
+All 13 phases are now complete. The app features a production-ready architecture with comprehensive functionality including enhanced onboarding with structured data collection, user profiles, iCloud sync, pull-to-refresh, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof with excellent user experience and professional data collection patterns.

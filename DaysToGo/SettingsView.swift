@@ -17,8 +17,8 @@ struct SettingsView: View {
                                 .frame(width: 28)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("Profile")
-                                if !profileStore.profile.name.isEmpty {
-                                    Text(profileStore.profile.name)
+                                if !profileStore.profile.fullName.isEmpty {
+                                    Text(profileStore.profile.fullName)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }

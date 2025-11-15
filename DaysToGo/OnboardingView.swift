@@ -10,11 +10,24 @@ import DaysToGoKit
 
 struct OnboardingView: View {
     @ObservedObject var profileStore: UserProfileStore
-    @State private var name: String = ""
-    @State private var location: String = ""
+    @State private var firstName: String = ""
+    @State private var surname: String = ""
+    @State private var country: String = ""
     @State private var currentPage = 0
 
     var onComplete: () -> Void
+
+    // List of countries
+    private let countries = [
+        "United States", "United Kingdom", "Canada", "Australia", "Germany",
+        "France", "Italy", "Spain", "Netherlands", "Belgium", "Switzerland",
+        "Sweden", "Norway", "Denmark", "Finland", "Ireland", "Austria",
+        "Portugal", "Greece", "Poland", "Czech Republic", "Hungary",
+        "Japan", "China", "South Korea", "India", "Singapore", "Thailand",
+        "Brazil", "Mexico", "Argentina", "Chile", "New Zealand",
+        "South Africa", "Israel", "Turkey", "United Arab Emirates",
+        "Saudi Arabia", "Egypt", "Nigeria", "Kenya", "Other"
+    ].sorted()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -108,11 +121,18 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
 
-            TextField("Enter your name", text: $name)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal, 40)
-                .autocapitalization(.words)
-                .textContentType(.name)
+            VStack(spacing: 12) {
+                TextField("First Name", text: $firstName)
+                    .textFieldStyle(.roundedBorder)
+                    .autocapitalization(.words)
+                    .textContentType(.givenName)
+
+                TextField("Surname", text: $surname)
+                    .textFieldStyle(.roundedBorder)
+                    .autocapitalization(.words)
+                    .textContentType(.familyName)
+            }
+            .padding(.horizontal, 40)
 
             Spacer()
 
@@ -141,10 +161,10 @@ struct OnboardingView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(name.isEmpty ? Color.gray : Color.accentColor)
+                        .background(firstName.isEmpty ? Color.gray : Color.accentColor)
                         .cornerRadius(12)
                 }
-                .disabled(name.isEmpty)
+                .disabled(firstName.isEmpty)
             }
             .padding(.horizontal, 40)
             .padding(.bottom, 40)
@@ -157,7 +177,7 @@ struct OnboardingView: View {
         VStack(spacing: 24) {
             Spacer()
 
-            Image(systemName: "mappin.circle.fill")
+            Image(systemName: "globe")
                 .font(.system(size: 80))
                 .foregroundColor(.accentColor)
 
@@ -165,17 +185,21 @@ struct OnboardingView: View {
                 .font(.title)
                 .fontWeight(.bold)
 
-            Text("Optional: Add your location to personalize reminders")
+            Text("Optional: Select your country")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
 
-            TextField("Enter your location", text: $location)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal, 40)
-                .autocapitalization(.words)
-                .textContentType(.addressCity)
+            Picker("Select Country", selection: $country) {
+                Text("Select a country").tag("")
+                ForEach(countries, id: \.self) { country in
+                    Text(country).tag(country)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(height: 150)
+            .padding(.horizontal, 40)
 
             Spacer()
 
@@ -214,7 +238,7 @@ struct OnboardingView: View {
     // MARK: - Actions
 
     private func completeOnboarding() {
-        profileStore.updateProfile(name: name, location: location)
+        profileStore.updateProfile(firstName: firstName, surname: surname, country: country)
         profileStore.completeOnboarding()
         onComplete()
     }

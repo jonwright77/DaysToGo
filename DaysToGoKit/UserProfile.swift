@@ -11,25 +11,33 @@ import Foundation
 
 /// Represents the user's profile information
 public struct UserProfile: Codable, Equatable {
-    public var name: String
-    public var location: String
+    public var firstName: String
+    public var surname: String
+    public var country: String
 
-    public init(name: String = "", location: String = "") {
-        self.name = name
-        self.location = location
+    public init(firstName: String = "", surname: String = "", country: String = "") {
+        self.firstName = firstName
+        self.surname = surname
+        self.country = country
+    }
+
+    /// Returns the full name (first name + surname)
+    public var fullName: String {
+        let names = [firstName, surname].filter { !$0.isEmpty }
+        return names.joined(separator: " ")
     }
 
     /// Returns true if the profile is incomplete (missing required fields)
     public var isIncomplete: Bool {
-        name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        firstName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     /// Returns a display-friendly greeting based on the profile
     public var greeting: String {
-        if name.isEmpty {
+        if firstName.isEmpty {
             return "Welcome"
         } else {
-            return "Hello, \(name)"
+            return "Hello, \(firstName)"
         }
     }
 }
