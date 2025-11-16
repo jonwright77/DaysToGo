@@ -102,3 +102,30 @@ class MockHistoryService: HistoricalEventFetching {
         }
     }
 }
+
+class MockLocationService: LocationFetching {
+    var shouldThrowError = false
+    var locationsToReturn: [LocationPoint] = []
+    var isTracking = false
+
+    func requestAuthorization() async throws {
+        if shouldThrowError {
+            throw AppError.permissionDenied(service: "Location")
+        }
+    }
+
+    func startTracking() {
+        isTracking = true
+    }
+
+    func stopTracking() {
+        isTracking = false
+    }
+
+    func fetchLocations(from date: Date, maxCount: Int) async throws -> [LocationPoint] {
+        if shouldThrowError {
+            throw AppError.underlying(NSError(domain: "LocationFetchError", code: 1))
+        }
+        return Array(locationsToReturn.prefix(maxCount))
+    }
+}

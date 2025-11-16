@@ -8,6 +8,20 @@
     <key>NSCalendarsUsageDescription</key>
     <string>This app uses your calendar to show past events from reflection dates.</string>
 
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app tracks your location to show where you were on past dates when viewing reminders.</string>
+
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app tracks your location in the background to build a history of where you've been. This allows you to see your movements on reflection dates in the future.</string>
+
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>This app tracks your location in the background to build a history of where you've been. This allows you to see your movements on reflection dates in the future.</string>
+
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>location</string>
+    </array>
+
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict/>

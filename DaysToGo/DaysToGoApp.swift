@@ -59,7 +59,10 @@ struct DaysToGoApp: App {
                     ReminderListView(reminderStore: reminderStore)
                         .environmentObject(calendarPrefs)
                         .environmentObject(profileStore)
-                        .onAppear(perform: requestNotificationPermission)
+                        .onAppear {
+                            requestNotificationPermission()
+                            requestLocationPermissionAndStartTracking()
+                        }
                         .onReceive(NotificationCenter.default.publisher(for: .remindersDidChange)) { _ in
                             WidgetCenter.shared.reloadTimelines(ofKind: AppConstants.widgetKind)
                         }
@@ -79,6 +82,18 @@ struct DaysToGoApp: App {
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
+            }
+        }
+    }
+
+    func requestLocationPermissionAndStartTracking() {
+        Task {
+            do {
+                try await ServiceContainer.shared.locationService.requestAuthorization()
+                ServiceContainer.shared.locationService.startTracking()
+                AppLogger.general.info("Location tracking started successfully")
+            } catch {
+                AppLogger.general.error("Failed to start location tracking: \(error.localizedDescription)")
             }
         }
     }

@@ -20,15 +20,18 @@ class ReminderDetailViewModel: ObservableObject {
     @Published var reflectionPhotos: [UIImage] = []
     @Published var calendarEvents: [CalendarEventViewModel] = []
     @Published var historicalEvents: [HistoricalEvent] = []
+    @Published var locationPoints: [LocationPoint] = []
     @Published var isLoadingPhotos = false
     @Published var isLoadingEvents = false
     @Published var isLoadingHistory = false
+    @Published var isLoadingLocations = false
     @Published var alertError: AppError?
 
     private let reminderStore: any ReminderStoring
     private let photoService: any PhotoFetching
     private let calendarService: any CalendarFetching
     private let historyService: any HistoricalEventFetching
+    private let locationService: any LocationFetching
 
     // Cache keys to avoid redundant API calls
     private var cachedReflectionDate: Date?
@@ -41,18 +44,21 @@ class ReminderDetailViewModel: ObservableObject {
     ///   - photoService: The service for fetching photos.
     ///   - calendarService: The service for fetching calendar events.
     ///   - historyService: The service for fetching historical events.
+    ///   - locationService: The service for fetching location data.
     init(
         reminder: Reminder,
         reminderStore: any ReminderStoring,
         photoService: any PhotoFetching,
         calendarService: any CalendarFetching,
-        historyService: any HistoricalEventFetching
+        historyService: any HistoricalEventFetching,
+        locationService: any LocationFetching
     ) {
         self.reminder = reminder
         self.reminderStore = reminderStore
         self.photoService = photoService
         self.calendarService = calendarService
         self.historyService = historyService
+        self.locationService = locationService
     }
 
     /// Convenience initializer using the shared service container.
@@ -69,12 +75,13 @@ class ReminderDetailViewModel: ObservableObject {
             reminderStore: services.reminderStore,
             photoService: services.photoService,
             calendarService: services.calendarService,
-            historyService: services.historyService
+            historyService: services.historyService,
+            locationService: services.locationService
         )
     }
 
     /// Convenience initializer with a specific reminder store.
-    /// Uses the shared service container for photo, calendar, and history services.
+    /// Uses the shared service container for photo, calendar, history, and location services.
     /// - Parameters:
     ///   - reminder: The reminder to display.
     ///   - reminderStore: The store managing reminders.
@@ -87,7 +94,8 @@ class ReminderDetailViewModel: ObservableObject {
             reminderStore: reminderStore,
             photoService: ServiceContainer.shared.photoService,
             calendarService: ServiceContainer.shared.calendarService,
-            historyService: ServiceContainer.shared.historyService
+            historyService: ServiceContainer.shared.historyService,
+            locationService: ServiceContainer.shared.locationService
         )
     }
 
@@ -100,6 +108,7 @@ class ReminderDetailViewModel: ObservableObject {
         let shouldReloadPhotos = cachedReflectionDate != reflectionDate
         let shouldReloadEvents = cachedReflectionDate != reflectionDate || cachedCalendarIDs != calendarIDSet
         let shouldReloadHistory = cachedReflectionDate != reflectionDate
+        let shouldReloadLocations = cachedReflectionDate != reflectionDate
 
         // Update cache keys
         cachedReflectionDate = reflectionDate
@@ -162,6 +171,21 @@ class ReminderDetailViewModel: ObservableObject {
                 } catch {
                     // Silently fail for historical events - not critical
                     AppLogger.general.error("Failed to fetch historical events: \(error.localizedDescription)")
+                }
+            }
+        }
+
+        if shouldReloadLocations {
+            Task {
+                isLoadingLocations = true
+                defer { isLoadingLocations = false }
+                do {
+                    let locations = try await locationService.fetchLocations(from: reflectionDate, maxCount: 50)
+                    self.locationPoints = locations
+                    AppLogger.general.info("Fetched \(locations.count) location points for reflection date")
+                } catch {
+                    // Silently fail for locations - not critical, may not have data yet
+                    AppLogger.general.error("Failed to fetch locations: \(error.localizedDescription)")
                 }
             }
         }

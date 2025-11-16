@@ -42,21 +42,27 @@ class ServiceContainer {
     /// Service for fetching historical events from Wikipedia.
     let historyService: any HistoricalEventFetching
 
+    /// Service for tracking and fetching location data.
+    let locationService: any LocationFetching
+
     /// Initializes a new service container with specified or default services.
     /// - Parameters:
     ///   - photoService: The photo service to use. Defaults to `PhotoService()`.
     ///   - calendarService: The calendar service to use. Defaults to `CalendarService()`.
     ///   - reminderStore: The reminder store to use. Defaults to `ReminderStore()`.
     ///   - historyService: The historical event service to use. Defaults to `WikipediaService()`.
+    ///   - locationService: The location service to use. Defaults to `LocationService()`.
     init(
         photoService: any PhotoFetching = PhotoService(),
         calendarService: any CalendarFetching = CalendarService(),
         reminderStore: any ReminderStoring = ReminderStore(),
-        historyService: any HistoricalEventFetching = WikipediaService()
+        historyService: any HistoricalEventFetching = WikipediaService(),
+        locationService: any LocationFetching = LocationService()
     ) {
         self.photoService = photoService
         self.calendarService = calendarService
         self.reminderStore = reminderStore
         self.historyService = historyService
+        self.locationService = locationService
     }
 }

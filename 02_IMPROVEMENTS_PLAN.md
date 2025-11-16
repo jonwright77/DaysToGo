@@ -454,4 +454,75 @@ This phase improved the onboarding experience with professional data collection 
    - **Files**:
      - **Modified**: `DaysToGoKit/UserProfile.swift`, `DaysToGo/UserProfileStore.swift`, `DaysToGo/OnboardingView.swift`, `DaysToGo/ProfileSettingsView.swift`, `DaysToGo/SettingsView.swift`
 
-All 13 phases are now complete. The app features a production-ready architecture with comprehensive functionality including enhanced onboarding with structured data collection, user profiles, iCloud sync, pull-to-refresh, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof with excellent user experience and professional data collection patterns.
+## Completed (Phase 14) - Location Tracking & Movement History
+
+This phase implemented battery-efficient background location tracking to build a history of user movements over time, displaying location data on interactive maps for reflection dates.
+
+1. **Significant Location Tracking System**
+   - **Status**: ✅ Completed
+   - **Summary**: Implemented background location tracking using CoreLocation's significant location changes API (battery-efficient, ~500m threshold) to build a comprehensive movement history over time. Location data for reflection dates is displayed on interactive maps in the reminder detail view, providing users with a visual representation of where they were on corresponding past dates.
+   - **LocationPoint Model** (`DaysToGoKit/LocationPoint.swift`):
+     - Stores latitude, longitude, timestamp, and horizontalAccuracy
+     - Converts from CLLocation objects
+     - `hasGoodAccuracy` property filters locations with accuracy > 100m
+     - `coordinate` property returns CLLocationCoordinate2D for MapKit integration
+   - **LocationFetching Protocol** (`DaysToGoKit/Protocols.swift`):
+     - `requestAuthorization()` - Async/await permission flow for Always authorization
+     - `startTracking()` - Begin significant location monitoring
+     - `stopTracking()` - Stop monitoring
+     - `fetchLocations(from:maxCount:)` - Retrieve locations for specific date
+   - **LocationService Implementation** (`Services/LocationService.swift`):
+     - Uses CLLocationManager with significant location changes (NOT continuous tracking)
+     - Battery-efficient: Only updates when user moves ~500m (Apple's threshold)
+     - Background location updates enabled via Info.plist
+     - Distance filter: 100m minimum between points
+     - Accuracy filter: Rejects locations with poor accuracy (> 100m)
+     - Automatic data management: Keeps last 90 days, older data auto-deleted
+     - Local persistence: Stores in JSON file in App Group container
+     - Async/await authorization handling with proper state management
+     - CLLocationManagerDelegate implementation for location updates
+   - **LocationMapView Component** (`LocationMapView.swift`):
+     - Interactive SwiftUI Map displaying all location points
+     - Markers at each location point with accent color
+     - Auto-calculates region to fit all points
+     - Chronological path connecting locations
+     - Proper coordinate-to-screen conversion for path overlay
+   - **ReminderDetailViewModel Updates**:
+     - Added `@Published var locationPoints: [LocationPoint]`
+     - Added `isLoadingLocations` state tracking
+     - Integrated location fetching with existing photo/calendar/history loading
+     - Cache-aware: Only reloads when reflection date changes
+     - Silent failure handling (not critical if no location data available)
+   - **ReminderDetailView Updates**:
+     - New "📍 Your Movements" section after historical events
+     - Map view showing location history (height: 250)
+     - Location count display
+     - Loading indicator during fetch
+     - Helpful empty state: "No Location Data / Location tracking builds history over time"
+     - Clean section separator with Divider
+   - **Permission Flow**:
+     - Requests Always authorization on app launch in `DaysToGoApp`
+     - Starts tracking automatically upon authorization
+     - Comprehensive Info.plist usage descriptions for all authorization types
+     - UIBackgroundModes includes location for background tracking
+     - Graceful error handling with logging
+   - **Privacy & Battery Considerations**:
+     - Significant location changes only (NOT continuous tracking)
+     - Minimal battery impact compared to continuous tracking
+     - User must explicitly grant Always authorization
+     - Data stored locally, not sent to external servers
+     - Automatic 90-day data cleanup to manage storage
+     - High accuracy filtering ensures quality data
+   - **Data Flow**:
+     - Background: LocationService monitors significant changes → stores LocationPoints
+     - Foreground: User opens reminder detail → fetch locations for reflection date → display on map
+     - No data initially (builds over time as user moves with app installed)
+   - **Testing Support**:
+     - MockLocationService for unit tests
+     - Tracks authorization and tracking state
+     - Returns configurable location arrays
+   - **Files**:
+     - **New**: `DaysToGoKit/LocationPoint.swift`, `Services/LocationService.swift`, `LocationMapView.swift`
+     - **Modified**: `DaysToGoKit/Protocols.swift`, `Services/ServiceContainer.swift`, `ViewModels/ReminderDetailViewModel.swift`, `ReminderDetailView.swift`, `DaysToGoApp.swift`, `Info.plist`, `MockServices.swift`
+
+All 14 phases are now complete. The app features a production-ready architecture with comprehensive functionality including location tracking with movement history maps, enhanced onboarding with structured data collection, user profiles, iCloud sync, pull-to-refresh, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof with excellent user experience, professional data collection patterns, and privacy-conscious location tracking.

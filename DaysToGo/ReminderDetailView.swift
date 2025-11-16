@@ -1,6 +1,7 @@
 import SwiftUI
 import Photos
 import EventKit
+import MapKit
 import DaysToGoKit
 
 struct ReminderDetailView: View {
@@ -178,6 +179,43 @@ struct ReminderDetailView: View {
                             .foregroundColor(.secondary)
                         Text("No Historical Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
                             .foregroundColor(.secondary)
+                    }
+                    .padding()
+                }
+
+                Divider()
+
+                // Location Map Section
+                if viewModel.isLoadingLocations {
+                    ProgressView()
+                        .padding()
+                } else if !viewModel.locationPoints.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("📍 Your Movements")
+                            .font(.headline)
+                            .padding(.horizontal)
+
+                        LocationMapView(locationPoints: viewModel.locationPoints)
+                            .frame(height: 250)
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+
+                        Text("\(viewModel.locationPoints.count) location\(viewModel.locationPoints.count == 1 ? "" : "s") recorded")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
+                } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                    VStack {
+                        Image(systemName: "map")
+                            .font(.largeTitle)
+                            .foregroundColor(.secondary)
+                        Text("No Location Data for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                            .foregroundColor(.secondary)
+                        Text("Location tracking builds history over time")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
                     }
                     .padding()
                 }

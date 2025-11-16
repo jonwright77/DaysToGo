@@ -93,3 +93,27 @@ public protocol HistoricalEventFetching {
     /// - Note: On devices without Apple Intelligence, returns events unchanged.
     func enhanceWithAI(_ events: [HistoricalEvent]) async -> [HistoricalEvent]
 }
+
+// MARK: - Location Service Protocol
+
+/// Protocol for fetching and tracking location data.
+public protocol LocationFetching {
+    /// Requests location tracking authorization from the user.
+    /// - Throws: `AppError` if authorization is denied or fails.
+    func requestAuthorization() async throws
+
+    /// Starts tracking significant location changes in the background.
+    /// This is battery efficient and only records significant movements.
+    func startTracking()
+
+    /// Stops tracking location changes.
+    func stopTracking()
+
+    /// Fetches location points from a specific date (within 24 hours).
+    /// - Parameters:
+    ///   - date: The date to fetch locations from.
+    ///   - maxCount: Maximum number of location points to return (default: 50).
+    /// - Returns: An array of LocationPoint objects from that date.
+    /// - Throws: `AppError` if the operation fails.
+    func fetchLocations(from date: Date, maxCount: Int) async throws -> [LocationPoint]
+}

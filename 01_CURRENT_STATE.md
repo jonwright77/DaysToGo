@@ -7,12 +7,13 @@
 - **Third-Party Dependencies**: There are no third-party dependencies evident from the project structure or `project.pbxproj` file.
 - **App Architecture**: The architecture has been refactored to a clean **MVVM (Model-View-ViewModel)** pattern with Dependency Injection.
     - **ViewModels**: `ReminderListViewModel` and `ReminderDetailViewModel` now contain the business logic and state management for their respective views.
-    - **Services**: Service protocols (`PhotoFetching`, `CalendarFetching`, `ReminderStoring`, `HistoricalEventFetching`) are defined in `DaysToGoKit/Protocols.swift` with comprehensive documentation. Concrete services (`PhotoService`, `CalendarService`, `ReminderStore`, `WikipediaService`) implement these protocols.
+    - **Services**: Service protocols (`PhotoFetching`, `CalendarFetching`, `ReminderStoring`, `HistoricalEventFetching`, `LocationFetching`) are defined in `DaysToGoKit/Protocols.swift` with comprehensive documentation. Concrete services (`PhotoService`, `CalendarService`, `ReminderStore`, `WikipediaService`, `LocationService`) implement these protocols.
     - **Dependency Injection**: A centralized `ServiceContainer` class manages all service dependencies. Services can be injected via the container's shared instance or through custom instances for testing. ViewModels provide convenience initializers that use the service container by default.
 - **Data Model & Persistence**:
-    - The primary data models are the `Reminder`, `CalendarEventViewModel`, `HistoricalEvent`, and `UserProfile` structs.
+    - The primary data models are the `Reminder`, `CalendarEventViewModel`, `HistoricalEvent`, `UserProfile`, and `LocationPoint` structs.
     - The `Reminder` model includes a `modifiedAt` timestamp property used for conflict resolution during sync operations.
     - The `UserProfile` model stores user's firstName, surname, and country, with helper properties (fullName, greeting) for personalization.
+    - The `LocationPoint` model stores latitude, longitude, timestamp, and accuracy data for location history tracking.
     - **Persistence is handled by a hybrid approach**: Reminders are saved immediately to a local JSON file within a **shared App Group container** for quick access and offline support. These local changes are then asynchronously synchronized with **CloudKit** for iCloud synchronization across devices.
     - **CloudKit Sync Strategy**: The app uses intelligent merge logic that compares local and cloud reminders by modification timestamp, uploads local-only changes, downloads new cloud reminders, and resolves conflicts by choosing the most recently modified version. This prevents data loss during offline/online transitions.
     - **Sync State Tracking**: `ReminderStore` publishes a `syncState` property (synced, syncing, offline, error) that tracks the current CloudKit synchronization status, providing visibility into network connectivity and sync issues.
@@ -36,6 +37,7 @@
     - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the calculated `reflectionDate`.
     - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
     - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, deaths, and holidays from throughout history. No API key required, completely free with unlimited access.
+    - **Location Tracking**: `LocationService` tracks significant location changes in the background using CoreLocation, building a history of user movements over time. Location data for the `reflectionDate` is displayed on an interactive map in the reminder detail view. Uses battery-efficient significant location changes (not continuous tracking), stores last 90 days of data locally, and filters poor accuracy locations.
     - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Calendars), plus app version information.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
     - **Splash Screen**: A custom splash screen is displayed on app launch.
@@ -73,8 +75,9 @@
 ## Privacy & Permissions
 
 - **Photo/Calendar Access**: The app correctly uses `PHPhotoLibrary.requestAuthorization` and `EKEventStore.requestFullAccessToEvents` to request permissions.
-- **Permission Prompts**: Permissions are requested when the features are first used. The app now gracefully handles permission denial by showing an alert.
-- **Privacy Manifest**: The `Info.plist` file contains the necessary usage descriptions: `NSPhotoLibraryUsageDescription` and `NSCalendarsUsageDescription`.
+- **Location Access**: The app uses `CLLocationManager.requestAlwaysAuthorization` to enable background location tracking. Location tracking is battery-efficient using significant location changes only (~500m threshold). Data is stored locally and automatically cleaned up after 90 days.
+- **Permission Prompts**: Permissions are requested on app launch (location) or when features are first used (photos/calendar). The app gracefully handles permission denial by showing alerts with helpful recovery suggestions.
+- **Privacy Manifest**: The `Info.plist` file contains the necessary usage descriptions: `NSPhotoLibraryUsageDescription`, `NSCalendarsUsageDescription`, `NSLocationWhenInUseUsageDescription`, `NSLocationAlwaysAndWhenInUseUsageDescription`, and `NSLocationAlwaysUsageDescription`. Background location updates are declared in `UIBackgroundModes`.
 
 ## Build/Tooling
 
