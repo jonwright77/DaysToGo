@@ -12,7 +12,8 @@ import DaysToGoKit
 @MainActor
 class ReminderListViewModel: ObservableObject {
     @Published var reminders: [Reminder] = []
-    
+    @Published var lastRefreshDate: Date = Date()
+
     private let reminderStore: any ReminderStoring
     private var cancellables = Set<AnyCancellable>()
     
@@ -39,5 +40,7 @@ class ReminderListViewModel: ObservableObject {
     /// Call this method for pull-to-refresh functionality.
     func refresh() async {
         await reminderStore.refresh()
+        // Update refresh date to trigger view updates for computed properties like daysRemaining
+        lastRefreshDate = Date()
     }
 }

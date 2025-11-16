@@ -53,6 +53,7 @@ struct ReminderListView: View {
                                 }
                             }
                             .padding()
+                            .id(viewModel.lastRefreshDate)
                         }
                         .refreshable {
                             await viewModel.refresh()
@@ -93,6 +94,12 @@ struct ReminderListView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + AnimationTiming.listAnimationDelay) {
                     didAnimate = true
                 }
+                // Trigger a refresh to update daysRemaining calculations
+                viewModel.lastRefreshDate = Date()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                // Update when app comes from background to refresh daysRemaining
+                viewModel.lastRefreshDate = Date()
             }
         }
     }
