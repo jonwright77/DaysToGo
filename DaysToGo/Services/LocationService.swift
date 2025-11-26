@@ -15,6 +15,7 @@ class LocationService: NSObject, LocationFetching {
     private var locationPoints: [LocationPoint] = []
     private let fileURL: URL
     private var authorizationContinuation: CheckedContinuation<Void, Error>?
+    private var lastRecordedDate: Date?
 
     override init() {
         // Set up file URL for storing locations
@@ -25,15 +26,20 @@ class LocationService: NSObject, LocationFetching {
 
         super.init()
 
-        // Configure location manager
+        // Configure location manager for more frequent updates
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.distanceFilter = 100 // Only update every 100 meters
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest // Better accuracy for detailed tracking
+        locationManager.distanceFilter = 20 // Update every 20 meters (more frequent)
         locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.pausesLocationUpdatesAutomatically = true
+        locationManager.pausesLocationUpdatesAutomatically = false // Keep tracking even when stationary
 
         // Load existing locations from file
         loadLocationsFromFile()
+
+        // Set last recorded date from most recent location
+        if let mostRecent = locationPoints.max(by: { $0.timestamp < $1.timestamp }) {
+            lastRecordedDate = Calendar.current.startOfDay(for: mostRecent.timestamp)
+        }
     }
 
     func requestAuthorization() async throws {
@@ -57,13 +63,13 @@ class LocationService: NSObject, LocationFetching {
     }
 
     func startTracking() {
-        AppLogger.general.info("Starting significant location tracking")
-        locationManager.startMonitoringSignificantLocationChanges()
+        AppLogger.general.info("Starting continuous location tracking (20m distance filter)")
+        locationManager.startUpdatingLocation()
     }
 
     func stopTracking() {
-        AppLogger.general.info("Stopping significant location tracking")
-        locationManager.stopMonitoringSignificantLocationChanges()
+        AppLogger.general.info("Stopping continuous location tracking")
+        locationManager.stopUpdatingLocation()
     }
 
     func fetchLocations(from date: Date, maxCount: Int = 50) async throws -> [LocationPoint] {
@@ -108,18 +114,30 @@ class LocationService: NSObject, LocationFetching {
 
     private func addLocation(_ location: CLLocation) {
         let locationPoint = LocationPoint(from: location)
+        let calendar = Calendar.current
+        let currentDate = calendar.startOfDay(for: location.timestamp)
 
-        // Only store locations with good accuracy
-        guard locationPoint.hasGoodAccuracy else {
-            AppLogger.general.info("Skipping location with poor accuracy: \(locationPoint.horizontalAccuracy)m")
-            return
+        // Check if this is the first location of a new day
+        let isFirstLocationOfDay = lastRecordedDate == nil || currentDate > lastRecordedDate!
+
+        // Always record first location of the day, regardless of accuracy
+        if isFirstLocationOfDay {
+            self.locationPoints.append(locationPoint)
+            lastRecordedDate = currentDate
+            AppLogger.general.info("Added FIRST location of day: \(locationPoint.latitude), \(locationPoint.longitude) at \(locationPoint.timestamp)")
+        } else {
+            // For subsequent locations, only store those with good accuracy
+            guard locationPoint.hasGoodAccuracy else {
+                AppLogger.general.info("Skipping location with poor accuracy: \(locationPoint.horizontalAccuracy)m")
+                return
+            }
+
+            self.locationPoints.append(locationPoint)
+            AppLogger.general.info("Added location: \(locationPoint.latitude), \(locationPoint.longitude) at \(locationPoint.timestamp)")
         }
 
-        self.locationPoints.append(locationPoint)
-        AppLogger.general.info("Added location: \(locationPoint.latitude), \(locationPoint.longitude) at \(locationPoint.timestamp)")
-
         // Keep only last 90 days of data to manage storage
-        let ninetyDaysAgo = Calendar.current.date(byAdding: .day, value: -90, to: Date()) ?? Date()
+        let ninetyDaysAgo = calendar.date(byAdding: .day, value: -90, to: Date()) ?? Date()
         self.locationPoints = self.locationPoints.filter { $0.timestamp >= ninetyDaysAgo }
 
         saveLocationsToFile()

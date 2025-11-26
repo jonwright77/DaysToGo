@@ -461,8 +461,8 @@ This phase improved the onboarding experience with professional data collection 
 This phase implemented battery-efficient background location tracking to build a history of user movements over time, displaying location data on interactive maps for reflection dates.
 
 1. **Significant Location Tracking System**
-   - **Status**: ✅ Completed
-   - **Summary**: Implemented background location tracking using CoreLocation's significant location changes API (battery-efficient, ~500m threshold) to build a comprehensive movement history over time. Location data for reflection dates is displayed on interactive maps in the reminder detail view, providing users with a visual representation of where they were on corresponding past dates.
+   - **Status**: ✅ Completed (Enhanced in Post-Phase 14 with more frequent tracking)
+   - **Summary**: Implemented background location tracking using CoreLocation to build a comprehensive movement history over time. Location data for reflection dates is displayed on interactive maps in the reminder detail view, providing users with a visual representation of where they were on corresponding past dates. Originally used significant location changes (~500m), later enhanced to continuous tracking (20m) with daily first location recording.
    - **LocationPoint Model** (`DaysToGoKit/LocationPoint.swift`):
      - Stores latitude, longitude, timestamp, and horizontalAccuracy
      - Converts from CLLocation objects
@@ -577,3 +577,63 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/Services/WikipediaService.swift` (filtering logic and parsing)
      - `01_CURRENT_STATE.md` (features documentation)
      - `02_IMPROVEMENTS_PLAN.md` (Phase 11 update + this documentation)
+
+2. **Enhanced Location Tracking for Detailed Movement History**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: The original implementation used significant location changes (~500m threshold) which provided sparse data points. Users wanted more detailed tracking to see their actual movement patterns throughout the day, plus guaranteed daily starting points for better context.
+   - **Summary**: Enhanced location tracking to capture more frequent movements (20m instead of 500m) and always record the first location of each day. This provides much richer movement history data while maintaining the 90-day storage policy.
+   - **Implementation Details**:
+     - **Distance Filter**: Reduced from 100m to 20m for more granular tracking
+     - **Tracking Mode**: Switched from `startMonitoringSignificantLocationChanges()` to `startUpdatingLocation()` for continuous updates
+     - **Accuracy**: Improved from `kCLLocationAccuracyHundredMeters` to `kCLLocationAccuracyBest`
+     - **Auto-Pause**: Disabled `pausesLocationUpdatesAutomatically` to continue tracking when stationary
+     - **Daily First Location**: Added logic to always record first location of each day regardless of accuracy
+     - **Date Tracking**: Added `lastRecordedDate` property to track the last day a location was recorded
+   - **Code Changes**:
+     - `LocationService.init()`: Updated configuration parameters (lines 29-34)
+     - `LocationService.init()`: Initialize `lastRecordedDate` from existing data (lines 39-42)
+     - `LocationService.startTracking()`: Changed to use `startUpdatingLocation()` (lines 65-68)
+     - `LocationService.stopTracking()`: Changed to use `stopUpdatingLocation()` (lines 70-73)
+     - `LocationService.addLocation()`: Added daily first location logic (lines 115-144)
+   - **Daily First Location Logic**:
+     - Compares current location date to `lastRecordedDate`
+     - If it's a new day (or first ever location), always records it
+     - Marks location with "FIRST location of day" in logs
+     - Updates `lastRecordedDate` to current day
+     - Subsequent locations on same day still require good accuracy
+   - **Accuracy Filtering**:
+     - **First location of day**: Always recorded (even if poor accuracy)
+     - **Subsequent locations**: Must have `horizontalAccuracy < 100m`
+     - Ensures daily context while maintaining quality data
+   - **User Experience Impact**:
+     - **Before**: Sparse location data, ~500m between points, might miss days entirely
+     - **After**: Detailed movement history, 20m granularity, guaranteed daily starting point
+     - Better visualization of daily routines and travel patterns
+     - More meaningful context when viewing reflection dates
+     - Able to see detailed paths, not just major movements
+   - **Example Scenarios**:
+     - Morning commute: Can see route taken, stops made along the way
+     - Weekend trip: Detailed trail of all locations visited
+     - Work day: Can see movement between meetings, lunch locations, etc.
+     - Daily start: Always know where each day began, even if stayed in one place
+   - **Battery Considerations**:
+     - **Important**: This is more battery-intensive than significant location changes
+     - Continuous location updates use more power than previous implementation
+     - Users should be aware of increased battery usage
+     - 90-day data limit helps manage storage and performance
+     - Trade-off: More detailed data vs. higher battery consumption
+   - **Privacy Considerations**:
+     - More frequent tracking = more detailed location history
+     - All data still stored locally (not sent to external servers)
+     - Automatic 90-day cleanup maintains privacy
+     - User has full control via Always authorization setting
+   - **Technical Considerations**:
+     - Uses same data model (`LocationPoint`)
+     - Same 90-day retention policy
+     - Same shared App Group storage
+     - Compatible with existing map visualization
+     - No API changes required
+   - **Files Modified**:
+     - `DaysToGo/Services/LocationService.swift` (tracking mode, accuracy, daily logic)
+     - `01_CURRENT_STATE.md` (features and privacy documentation)

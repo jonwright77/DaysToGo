@@ -38,7 +38,7 @@
     - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the calculated `reflectionDate`.
     - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
     - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, and deaths that match the exact year of the reflection date. Recurring holidays are excluded to focus on unique historical events. No API key required, completely free with unlimited access.
-    - **Location Tracking**: `LocationService` tracks significant location changes in the background using CoreLocation, building a history of user movements over time. Location data for the `reflectionDate` is displayed on an interactive map in the reminder detail view. Uses battery-efficient significant location changes (not continuous tracking), stores last 90 days of data locally, and filters poor accuracy locations.
+    - **Location Tracking**: `LocationService` tracks location changes in the background using CoreLocation, building a detailed history of user movements over time. Location data for the `reflectionDate` is displayed on an interactive map in the reminder detail view. Uses continuous location updates with 20-meter distance filter for detailed tracking, automatically records the first location of each day, stores last 90 days of data locally, and filters poor accuracy locations (except for daily first entries).
     - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Calendars), plus app version information.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
     - **Splash Screen**: A custom splash screen is displayed on app launch.
@@ -76,7 +76,7 @@
 ## Privacy & Permissions
 
 - **Photo/Calendar Access**: The app correctly uses `PHPhotoLibrary.requestAuthorization` and `EKEventStore.requestFullAccessToEvents` to request permissions.
-- **Location Access**: The app uses `CLLocationManager.requestAlwaysAuthorization` to enable background location tracking. Location tracking is battery-efficient using significant location changes only (~500m threshold). Data is stored locally and automatically cleaned up after 90 days.
+- **Location Access**: The app uses `CLLocationManager.requestAlwaysAuthorization` to enable background location tracking. Location tracking uses continuous updates with 20-meter distance filter for detailed movement history. The first location of each day is always recorded. Data is stored locally and automatically cleaned up after 90 days.
 - **Permission Prompts**: Permissions are requested on app launch (location) or when features are first used (photos/calendar). The app gracefully handles permission denial by showing alerts with helpful recovery suggestions.
 - **Privacy Manifest**: The `Info.plist` file contains the necessary usage descriptions: `NSPhotoLibraryUsageDescription`, `NSCalendarsUsageDescription`, `NSLocationWhenInUseUsageDescription`, `NSLocationAlwaysAndWhenInUseUsageDescription`, and `NSLocationAlwaysUsageDescription`. Background location updates are declared in `UIBackgroundModes`.
 
@@ -95,4 +95,15 @@
 - Excluded recurring holidays entirely from historical events display
 - Events now show only what happened on that specific date in that specific year
 - Provides more relevant, personalized historical context for reflection dates
+- See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
+
+### November 2025 - Enhanced Location Tracking
+
+**More Detailed Movement History**
+- Switched from significant location changes (~500m) to continuous updates (20m distance filter)
+- Implemented daily first location recording - always captures where the day started
+- Improved accuracy from 100m to Best for more precise tracking
+- First location of each day is always recorded regardless of accuracy
+- Subsequent locations still filter for good accuracy (< 100m)
+- Provides much more detailed movement history throughout each day
 - See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
