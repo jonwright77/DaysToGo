@@ -637,3 +637,71 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
    - **Files Modified**:
      - `DaysToGo/Services/LocationService.swift` (tracking mode, accuracy, daily logic)
      - `01_CURRENT_STATE.md` (features and privacy documentation)
+
+3. **Display Options Settings for Reminder Data Visibility**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: Users wanted control over which data types appear in reminder details. Some users may not want to see certain sections (e.g., privacy concerns with location, no interest in historical events, etc.). Rather than showing empty states, completely hiding sections provides a cleaner, more customized experience.
+   - **Summary**: Added a new settings submenu that allows users to toggle visibility of the four data types shown in reminder details: Photos, Calendar Events, On This Day (historical events), and Location. When toggled off, sections are completely hidden with no placeholders or empty states.
+   - **Implementation Details**:
+     - **Preference Model**: Created `ReminderDisplayPreferences` class with 4 boolean properties
+     - **Storage**: Uses UserDefaults for persistence across app launches
+     - **Defaults**: All toggles default to `true` (show everything)
+     - **Settings UI**: Created `ReminderDisplaySettingsView` with simple toggle list
+     - **Detail View**: Updated `ReminderDetailView` to conditionally render sections
+     - **Environment Injection**: Preferences injected via SwiftUI environment
+   - **Code Changes**:
+     - **New Files**:
+       - `ReminderDisplayPreferences.swift` - Preference management class
+       - `ReminderDisplaySettingsView.swift` - Settings UI for toggles
+     - **Modified Files**:
+       - `SettingsView.swift` - Added Display Options menu item with eye icon
+       - `ReminderDetailView.swift` - Wrapped all 4 sections in conditional checks
+       - `DaysToGoApp.swift` - Created and injected displayPrefs into environment
+       - `ReminderListView.swift` - Added environment object and passed to SettingsView
+   - **Settings Navigation**:
+     - Path: Settings → Data Sources → Display Options
+     - Icon: Eye symbol (system image: "eye")
+     - Position: First item in Data Sources section, above Calendars
+   - **Toggle Options**:
+     - **Photos**: Controls Photos section visibility
+     - **Calendar Events**: Controls Calendar Events section visibility
+     - **On This Day**: Controls Historical Events section visibility
+     - **Location**: Controls Location Map section visibility
+   - **Conditional Rendering Logic**:
+     - Each section wrapped in `if displayPrefs.show* { ... }`
+     - When `false`: Section completely omitted from view hierarchy
+     - No dividers, no loading states, no empty states shown
+     - Clean, minimal UI when sections are hidden
+   - **User Experience**:
+     - **All ON (default)**: Shows all 4 data sections as before
+     - **Some OFF**: Only shows enabled sections, seamless layout
+     - **All OFF**: Shows only title, date, description, and action buttons
+     - Changes take effect immediately when toggles are changed
+     - Preferences persist across app launches and restarts
+   - **Example Use Cases**:
+     - Privacy-focused user disables Location tracking visibility
+     - Minimalist user only wants to see Photos, hides everything else
+     - User not interested in history disables On This Day
+     - User with no calendars connected disables Calendar Events
+   - **UI Details**:
+     - Toggle style: Switch with accent color tint
+     - Section header: "Visible Data Types"
+     - Section footer: Explains disabled types won't appear at all
+     - Navigation title: "Display Options"
+     - Title display mode: Inline
+   - **Technical Benefits**:
+     - Clean separation of concerns (preferences vs. presentation)
+     - Uses SwiftUI environment for clean data flow
+     - No prop drilling required
+     - Easily extensible for future data types
+     - Follows existing CalendarPreferences pattern
+   - **Privacy Benefits**:
+     - Users can hide location data even if tracking is enabled
+     - Provides control over what personal data is displayed
+     - No data deleted, just hidden from view
+     - Can re-enable anytime to see historical data
+   - **Files Modified**:
+     - **New**: `DaysToGo/ReminderDisplayPreferences.swift`, `DaysToGo/ReminderDisplaySettingsView.swift`
+     - **Modified**: `DaysToGo/SettingsView.swift`, `DaysToGo/ReminderDetailView.swift`, `DaysToGo/DaysToGoApp.swift`, `DaysToGo/ReminderListView.swift`
+     - **Documentation**: `01_CURRENT_STATE.md` (features, data model, recent changes)

@@ -19,6 +19,7 @@
     - **CloudKit Sync Strategy**: The app uses intelligent merge logic that compares local and cloud reminders by modification timestamp, uploads local-only changes, downloads new cloud reminders, and resolves conflicts by choosing the most recently modified version. This prevents data loss during offline/online transitions.
     - **Sync State Tracking**: `ReminderStore` publishes a `syncState` property (synced, syncing, offline, error) that tracks the current CloudKit synchronization status, providing visibility into network connectivity and sync issues.
     - **User Profile Management**: `UserProfileStore` manages user profile data (firstName, surname, country) via UserDefaults, with automatic persistence and onboarding status tracking.
+    - **Display Preferences**: `ReminderDisplayPreferences` manages user preferences for which data types are visible in reminder details (Photos, Calendar Events, On This Day, Location). Preferences are stored in UserDefaults and default to all enabled.
     - Calendar preferences are stored in `UserDefaults` by `CalendarPreferences`.
     - All app-wide constants (App Group ID, widget kind, notification names) are centralized in `DaysToGoKit/Constants.swift`.
 
@@ -39,7 +40,7 @@
     - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
     - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, and deaths that match the exact year of the reflection date. Recurring holidays are excluded to focus on unique historical events. No API key required, completely free with unlimited access.
     - **Location Tracking**: `LocationService` tracks location changes in the background using CoreLocation, building a detailed history of user movements over time. Location data for the `reflectionDate` is displayed on an interactive map in the reminder detail view. Uses continuous location updates with 20-meter distance filter for detailed tracking, automatically records the first location of each day, stores last 90 days of data locally, and filters poor accuracy locations (except for daily first entries).
-    - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Calendars), plus app version information.
+    - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Display Options, Calendars), plus app version information. Display Options allow users to toggle visibility of Photos, Calendar Events, On This Day, and Location sections in reminder details.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
     - **Splash Screen**: A custom splash screen is displayed on app launch.
 - **Gaps & TODOs**: 
@@ -106,4 +107,14 @@
 - First location of each day is always recorded regardless of accuracy
 - Subsequent locations still filter for good accuracy (< 100m)
 - Provides much more detailed movement history throughout each day
+- See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
+
+### November 2025 - Display Options Settings
+
+**Customizable Reminder Data Visibility**
+- Added new Display Options settings submenu (Settings → Data Sources → Display Options)
+- Users can toggle visibility of 4 data types: Photos, Calendar Events, On This Day, Location
+- When toggled off, sections are completely hidden (no placeholders, no empty states)
+- Preferences persist via UserDefaults and default to all enabled
+- Provides privacy and customization control over reminder detail views
 - See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation

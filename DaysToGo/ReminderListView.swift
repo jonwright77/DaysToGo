@@ -3,7 +3,8 @@ import DaysToGoKit
 
 struct ReminderListView: View {
     @EnvironmentObject var calendarPrefs: CalendarPreferences
-    
+    @EnvironmentObject var displayPrefs: ReminderDisplayPreferences
+
     @StateObject private var viewModel: ReminderListViewModel
     private let reminderStore: ReminderStore
 
@@ -88,7 +89,7 @@ struct ReminderListView: View {
                 }
             }
             .sheet(isPresented: $showingSettings) {
-                SettingsView(calendarPrefs: calendarPrefs)
+                SettingsView(calendarPrefs: calendarPrefs, displayPrefs: displayPrefs)
             }
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + AnimationTiming.listAnimationDelay) {

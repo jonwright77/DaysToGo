@@ -36,6 +36,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 struct DaysToGoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var calendarPrefs = CalendarPreferences()
+    @StateObject var displayPrefs = ReminderDisplayPreferences()
     @StateObject var reminderStore = ReminderStore()
     @StateObject var profileStore = UserProfileStore.shared
     @State private var showSplash = true
@@ -58,6 +59,7 @@ struct DaysToGoApp: App {
                 } else {
                     ReminderListView(reminderStore: reminderStore)
                         .environmentObject(calendarPrefs)
+                        .environmentObject(displayPrefs)
                         .environmentObject(profileStore)
                         .onAppear {
                             requestNotificationPermission()

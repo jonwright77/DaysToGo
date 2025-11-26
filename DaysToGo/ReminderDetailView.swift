@@ -7,6 +7,7 @@ import DaysToGoKit
 struct ReminderDetailView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var calendarPrefs: CalendarPreferences
+    @EnvironmentObject var displayPrefs: ReminderDisplayPreferences
 
     @StateObject private var viewModel: ReminderDetailViewModel
 
@@ -49,175 +50,185 @@ struct ReminderDetailView: View {
                     .padding(.horizontal)
                 }
 
-                Divider()
+                // Photos Section
+                if displayPrefs.showPhotos {
+                    Divider()
 
-                if viewModel.isLoadingPhotos {
-                    ProgressView()
-                        .padding()
-                } else if !viewModel.reflectionPhotos.isEmpty {
-                    LazyVGrid(columns: [GridItem(), GridItem()], spacing: 8) {
-                        ForEach(viewModel.reflectionPhotos, id: \.self) { image in
-                            Image(uiImage: image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 160, height: 160)
-                                .clipped()
-                                .cornerRadius(8)
-                                .onTapGesture {
-                                    selectedImage = image
-                                }
-                                .accessibilityElement(children: .ignore)
-                                .accessibilityLabel("Reflection photo")
-                        }
-                    }
-                    .padding(.top)
-                } else if let reflectionDate = viewModel.reminder.reflectionDate {
-                    VStack {
-                        Image(systemName: "photo.on.rectangle.angled")
-                            .font(.largeTitle)
-                            .foregroundColor(.secondary)
-                        Text("No Photos on \(reflectionDate.formatted(date: .long, time: .omitted))")
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
-                }
-
-                Divider()
-
-                if viewModel.isLoadingEvents {
-                    ProgressView()
-                        .padding()
-                } else if !viewModel.calendarEvents.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(viewModel.calendarEvents) { event in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(event.title)
-                                    .font(.headline)
-                                Text(event.time)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Text(event.calendarName)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
+                    if viewModel.isLoadingPhotos {
+                        ProgressView()
+                            .padding()
+                    } else if !viewModel.reflectionPhotos.isEmpty {
+                        LazyVGrid(columns: [GridItem(), GridItem()], spacing: 8) {
+                            ForEach(viewModel.reflectionPhotos, id: \.self) { image in
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 160, height: 160)
+                                    .clipped()
+                                    .cornerRadius(8)
+                                    .onTapGesture {
+                                        selectedImage = image
+                                    }
+                                    .accessibilityElement(children: .ignore)
+                                    .accessibilityLabel("Reflection photo")
                             }
-                            .padding(8)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("\(event.title) at \(event.time) from \(event.calendarName) calendar")
                         }
+                        .padding(.top)
+                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                        VStack {
+                            Image(systemName: "photo.on.rectangle.angled")
+                                .font(.largeTitle)
+                                .foregroundColor(.secondary)
+                            Text("No Photos on \(reflectionDate.formatted(date: .long, time: .omitted))")
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
                     }
-                    .padding(.horizontal)
-                } else if let reflectionDate = viewModel.reminder.reflectionDate {
-                    VStack {
-                        Image(systemName: "calendar.badge.exclamationmark")
-                            .font(.largeTitle)
-                            .foregroundColor(.secondary)
-                        Text("No Calendar Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
+
+                    Divider()
                 }
 
-                Divider()
+                // Calendar Events Section
+                if displayPrefs.showCalendar {
+                    if viewModel.isLoadingEvents {
+                        ProgressView()
+                            .padding()
+                    } else if !viewModel.calendarEvents.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(viewModel.calendarEvents) { event in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(event.title)
+                                        .font(.headline)
+                                    Text(event.time)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Text(event.calendarName)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                                .padding(8)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("\(event.title) at \(event.time) from \(event.calendarName) calendar")
+                            }
+                        }
+                        .padding(.horizontal)
+                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                        VStack {
+                            Image(systemName: "calendar.badge.exclamationmark")
+                                .font(.largeTitle)
+                                .foregroundColor(.secondary)
+                            Text("No Calendar Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                    }
+
+                    Divider()
+                }
 
                 // Historical Events Section
-                if viewModel.isLoadingHistory {
-                    ProgressView()
-                        .padding()
-                } else if !viewModel.historicalEvents.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("📅 On This Day in History")
-                            .font(.headline)
-                            .padding(.horizontal)
+                if displayPrefs.showOnThisDay {
+                    if viewModel.isLoadingHistory {
+                        ProgressView()
+                            .padding()
+                    } else if !viewModel.historicalEvents.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("📅 On This Day in History")
+                                .font(.headline)
+                                .padding(.horizontal)
 
-                        ForEach(viewModel.historicalEvents) { event in
-                            VStack(alignment: .leading, spacing: 6) {
-                                HStack {
-                                    Text(String(event.year))
-                                        .font(.title3)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.accentColor)
+                            ForEach(viewModel.historicalEvents) { event in
+                                VStack(alignment: .leading, spacing: 6) {
+                                    HStack {
+                                        Text(String(event.year))
+                                            .font(.title3)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.accentColor)
 
-                                    Image(systemName: event.eventType.icon)
-                                        .foregroundColor(.secondary)
-                                        .font(.caption)
+                                        Image(systemName: event.eventType.icon)
+                                            .foregroundColor(.secondary)
+                                            .font(.caption)
+                                    }
+
+                                    Text(event.text)
+                                        .font(.subheadline)
+
+                                    // Show AI summary if available (iOS 18+)
+                                    if let aiSummary = event.aiSummary {
+                                        Text(aiSummary)
+                                            .font(.caption)
+                                            .foregroundColor(.blue)
+                                            .italic()
+                                            .padding(.top, 2)
+                                    }
+
+                                    // Show Wikipedia link if available
+                                    if let url = event.url {
+                                        Link("Read on Wikipedia →", destination: url)
+                                            .font(.caption)
+                                            .foregroundColor(.accentColor)
+                                    }
                                 }
-
-                                Text(event.text)
-                                    .font(.subheadline)
-
-                                // Show AI summary if available (iOS 18+)
-                                if let aiSummary = event.aiSummary {
-                                    Text(aiSummary)
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                        .italic()
-                                        .padding(.top, 2)
-                                }
-
-                                // Show Wikipedia link if available
-                                if let url = event.url {
-                                    Link("Read on Wikipedia →", destination: url)
-                                        .font(.caption)
-                                        .foregroundColor(.accentColor)
-                                }
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("\(event.year): \(event.text)")
                             }
-                            .padding(10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("\(event.year): \(event.text)")
                         }
+                        .padding(.horizontal)
+                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                        VStack {
+                            Image(systemName: "calendar.badge.clock")
+                                .font(.largeTitle)
+                                .foregroundColor(.secondary)
+                            Text("No Historical Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
                     }
-                    .padding(.horizontal)
-                } else if let reflectionDate = viewModel.reminder.reflectionDate {
-                    VStack {
-                        Image(systemName: "calendar.badge.clock")
-                            .font(.largeTitle)
-                            .foregroundColor(.secondary)
-                        Text("No Historical Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
-                            .foregroundColor(.secondary)
-                    }
-                    .padding()
+
+                    Divider()
                 }
 
-                Divider()
-
                 // Location Map Section
-                if viewModel.isLoadingLocations {
-                    ProgressView()
+                if displayPrefs.showLocation {
+                    if viewModel.isLoadingLocations {
+                        ProgressView()
+                            .padding()
+                    } else if !viewModel.locationPoints.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("📍 Your Movements")
+                                .font(.headline)
+                                .padding(.horizontal)
+
+                            LocationMapView(locationPoints: viewModel.locationPoints)
+                                .frame(height: 250)
+                                .cornerRadius(12)
+                                .padding(.horizontal)
+
+                            Text("\(viewModel.locationPoints.count) location\(viewModel.locationPoints.count == 1 ? "" : "s") recorded")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal)
+                        }
+                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                        VStack {
+                            Image(systemName: "map")
+                                .font(.largeTitle)
+                                .foregroundColor(.secondary)
+                            Text("No Location Data for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                                .foregroundColor(.secondary)
+                            Text("Location tracking builds history over time")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
                         .padding()
-                } else if !viewModel.locationPoints.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("📍 Your Movements")
-                            .font(.headline)
-                            .padding(.horizontal)
-
-                        LocationMapView(locationPoints: viewModel.locationPoints)
-                            .frame(height: 250)
-                            .cornerRadius(12)
-                            .padding(.horizontal)
-
-                        Text("\(viewModel.locationPoints.count) location\(viewModel.locationPoints.count == 1 ? "" : "s") recorded")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal)
                     }
-                } else if let reflectionDate = viewModel.reminder.reflectionDate {
-                    VStack {
-                        Image(systemName: "map")
-                            .font(.largeTitle)
-                            .foregroundColor(.secondary)
-                        Text("No Location Data for \(reflectionDate.formatted(date: .long, time: .omitted))")
-                            .foregroundColor(.secondary)
-                        Text("Location tracking builds history over time")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                    }
-                    .padding()
                 }
 
                 Spacer()

@@ -3,6 +3,7 @@ import DaysToGoKit
 
 struct SettingsView: View {
     @ObservedObject var calendarPrefs: CalendarPreferences
+    @ObservedObject var displayPrefs: ReminderDisplayPreferences
     @EnvironmentObject var profileStore: UserProfileStore
     @Environment(\.dismiss) var dismiss
 
@@ -30,6 +31,15 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    NavigationLink(destination: ReminderDisplaySettingsView(displayPrefs: displayPrefs)) {
+                        HStack {
+                            Image(systemName: "eye")
+                                .foregroundColor(.accentColor)
+                                .frame(width: 28)
+                            Text("Display Options")
+                        }
+                    }
+
                     NavigationLink(destination: CalendarSettingsView(calendarPrefs: calendarPrefs)) {
                         HStack {
                             Image(systemName: "calendar")
