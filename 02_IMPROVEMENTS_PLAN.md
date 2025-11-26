@@ -322,17 +322,18 @@ This phase added news headlines functionality to show relevant news from reflect
 This phase replaced the expensive NewsAPI.org integration with Wikipedia's free "On This Day" feature, providing a cost-effective and more historically rich alternative.
 
 1. **Wikipedia Historical Events Integration**
-   - **Status**: ✅ Completed
-   - **Summary**: Replaced NewsAPI.org ($449/month for historical data) with Wikipedia's completely free "On This Day" API. The new implementation provides unlimited access to historical events spanning all of human history, eliminating API costs and date range limitations while enhancing the user experience with timeless historical content.
+   - **Status**: ✅ Completed (Updated in Post-Phase 14 with exact year filtering)
+   - **Summary**: Replaced NewsAPI.org ($449/month for historical data) with Wikipedia's completely free "On This Day" API. The implementation provides unlimited access to historical events, filtering to show only events matching the exact year of the reflection date while excluding recurring holidays. This provides highly relevant, personalized historical context.
    - **Cost Savings**: $449/month → $0/month (100% free, no API key required)
    - **Data Range**: 30 days (NewsAPI limitation) → All of history (Wikipedia advantage)
    - **Rate Limits**: 100 requests/day → Unlimited reasonable usage
    - **Implementation Details**:
-     - Created `HistoricalEvent` model in DaysToGoKit with year, text, eventType (event/birth/death/holiday/selected), url, imageUrl, and optional aiSummary
+     - Created `HistoricalEvent` model in DaysToGoKit with year, text, eventType (event/birth/death/selected), url, imageUrl, and optional aiSummary
      - Renamed protocol from `NewsFetching` to `HistoricalEventFetching` with methods `fetchEvents(from:maxCount:)` and `enhanceWithAI(_:)`
      - Implemented `WikipediaService` using Wikipedia's REST API: `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/{MM}/{DD}`
-     - Service combines selected events, regular events, births, deaths, and holidays into unified list
-     - Events sorted by year (most recent first) and limited to configurable count (default 10)
+     - Service filters to show only events matching the exact year of the reflection date (e.g., November 16, 2020 shows only events from that date in 2020)
+     - Recurring holidays are completely excluded to focus on unique historical events
+     - Processes selected events, regular events, births, and deaths (holidays excluded)
      - Retained Apple Intelligence AI enhancement for iOS 18+ devices
      - Updated ServiceContainer to inject `WikipediaService` as `historyService`
      - Updated ReminderDetailViewModel to use `historicalEvents` and `isLoadingHistory` properties
@@ -340,10 +341,11 @@ This phase replaced the expensive NewsAPI.org integration with Wikipedia's free 
      - Updated MockHistoryService for unit testing
      - Removed all NewsAPI-related files and configuration
    - **User Experience Improvements**:
-     - More engaging content: "1969 - Apollo 11 lands on the moon" vs. news from 30 days ago
+     - Highly relevant content showing what actually happened on that exact date in that specific year
      - Works with any date in history, not just recent past
      - Event categorization with visual icons (📅 events, 🎁 births, 🍂 deaths, ⭐ featured)
      - Direct links to detailed Wikipedia articles
+     - No repetitive holiday information
      - No configuration required - works immediately
      - Graceful silent failure if Wikipedia unavailable (non-critical feature)
    - **Technical Benefits**:
@@ -526,3 +528,52 @@ This phase implemented battery-efficient background location tracking to build a
      - **Modified**: `DaysToGoKit/Protocols.swift`, `Services/ServiceContainer.swift`, `ViewModels/ReminderDetailViewModel.swift`, `ReminderDetailView.swift`, `DaysToGoApp.swift`, `Info.plist`, `MockServices.swift`
 
 All 14 phases are now complete. The app features a production-ready architecture with comprehensive functionality including location tracking with movement history maps, enhanced onboarding with structured data collection, user profiles, iCloud sync, pull-to-refresh, home screen widgets, historical events from Wikipedia, photo and calendar integration, and Apple Intelligence enhancements. The codebase is cost-effective, maintainable, well-tested, and future-proof with excellent user experience, professional data collection patterns, and privacy-conscious location tracking.
+
+## Post-Phase 14 Enhancements
+
+### Historical Events Filtering (November 2025)
+
+These enhancements refine the Wikipedia "On This Day" feature to provide more relevant and personalized historical context.
+
+1. **Exact Year Matching & Holiday Exclusion**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: The original implementation showed all events that happened on a given day/month throughout history, which often resulted in generic historical trivia that wasn't personally relevant. By filtering to the exact year of the reflection date and removing recurring holidays, users now see events that actually happened on that specific date in their past.
+   - **Summary**: Modified Wikipedia historical events to show only events matching the exact year of the reflection date, excluding recurring holidays. This provides more personalized and relevant historical context by focusing on unique events from the specific year rather than general historical trivia.
+   - **Implementation Details**:
+     - **Year Extraction**: Extract year component from reflection date alongside month/day
+     - **Exact Year Filter**: Apply `.filter { $0.year == reflectionYear }` to all parsed events
+     - **Holiday Exclusion**: Removed entire holidays section from API response processing
+     - **Simplified Parsing**: Cleaned up `parseEvents()` method to remove special holiday handling logic
+     - **Enhanced Logging**: Updated log messages to include year for better debugging and monitoring
+   - **Code Changes**:
+     - `WikipediaService.fetchEvents()`: Added year extraction and filtering logic (lines 16-97)
+     - `WikipediaService.parseEvents()`: Removed holiday-specific branching (lines 126-135)
+     - Removed processing of `apiResponse.holidays` section entirely
+   - **Event Types Included**:
+     - ✅ Selected/Featured events
+     - ✅ Regular historical events
+     - ✅ Notable births
+     - ✅ Notable deaths
+     - ❌ Recurring holidays (excluded)
+   - **User Experience Impact**:
+     - **Before**: "November 16" shows Apollo 11 launch (1969), fall of Berlin Wall (1989), random holidays
+     - **After**: "November 16, 2020" shows only events from November 16, 2020
+     - More personally relevant - shows what actually happened on that exact date in the user's past
+     - Cleaner, more focused list without repetitive holiday information
+     - Stronger emotional connection to historical context
+     - May show fewer events (or none) for recent dates, which is expected and acceptable
+   - **Example Scenarios**:
+     - Reflection date: March 11, 2011 → Shows Japan earthquake/tsunami events from that exact day
+     - Reflection date: September 11, 2001 → Shows 9/11 events from that specific year
+     - Reflection date: July 20, 1969 → Shows Apollo 11 moon landing events from that date
+     - Reflection date: December 25, 2023 → Shows actual events from 2023, not generic Christmas info
+   - **Technical Considerations**:
+     - Wikipedia API still returns all years; filtering happens client-side
+     - No additional API calls required
+     - Maintains performance while improving relevance
+     - Graceful degradation: shows empty state if no events match the exact year
+   - **Files Modified**:
+     - `DaysToGo/Services/WikipediaService.swift` (filtering logic and parsing)
+     - `01_CURRENT_STATE.md` (features documentation)
+     - `02_IMPROVEMENTS_PLAN.md` (Phase 11 update + this documentation)

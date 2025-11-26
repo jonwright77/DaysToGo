@@ -12,6 +12,7 @@
 - **Data Model & Persistence**:
     - The primary data models are the `Reminder`, `CalendarEventViewModel`, `HistoricalEvent`, `UserProfile`, and `LocationPoint` structs.
     - The `Reminder` model includes a `modifiedAt` timestamp property used for conflict resolution during sync operations.
+    - The `HistoricalEvent` model represents Wikipedia events with year, text, eventType (event/birth/death/selected), url, imageUrl, and optional aiSummary. Holiday events are excluded from the app.
     - The `UserProfile` model stores user's firstName, surname, and country, with helper properties (fullName, greeting) for personalization.
     - The `LocationPoint` model stores latitude, longitude, timestamp, and accuracy data for location history tracking.
     - **Persistence is handled by a hybrid approach**: Reminders are saved immediately to a local JSON file within a **shared App Group container** for quick access and offline support. These local changes are then asynchronously synchronized with **CloudKit** for iCloud synchronization across devices.
@@ -36,7 +37,7 @@
     - **Past-Date Logic**: A `reflectionDate` computed property calculates the date in the past corresponding to the "days remaining" count.
     - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the calculated `reflectionDate`.
     - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
-    - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, deaths, and holidays from throughout history. No API key required, completely free with unlimited access.
+    - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, and deaths that match the exact year of the reflection date. Recurring holidays are excluded to focus on unique historical events. No API key required, completely free with unlimited access.
     - **Location Tracking**: `LocationService` tracks significant location changes in the background using CoreLocation, building a history of user movements over time. Location data for the `reflectionDate` is displayed on an interactive map in the reminder detail view. Uses battery-efficient significant location changes (not continuous tracking), stores last 90 days of data locally, and filters poor accuracy locations.
     - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Calendars), plus app version information.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
@@ -84,3 +85,14 @@
 - **Linters/Formatters**: **SwiftLint** has been integrated into the project with a `.swiftlint.yml` configuration file to enforce code style and conventions.
 - **Build Settings**: The project has standard Debug and Release configurations. **App Groups** have been configured to enable data sharing between the main app and the widget extension. A new **`DaysToGoKit` framework** has been added to encapsulate shared code, resolving dependency issues between the main app and its extensions.
 - **CI/CD**: There is no evidence of a Continuous Integration or Continuous Deployment pipeline.
+
+## Recent Changes
+
+### November 2025 - Historical Events Filtering Enhancement
+
+**Wikipedia "On This Day" Exact Year Matching**
+- Modified `WikipediaService` to filter events by exact year match (not just day/month)
+- Excluded recurring holidays entirely from historical events display
+- Events now show only what happened on that specific date in that specific year
+- Provides more relevant, personalized historical context for reflection dates
+- See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation

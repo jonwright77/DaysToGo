@@ -17,6 +17,7 @@ class WikipediaService: HistoricalEventFetching {
         let calendar = Calendar.current
         let month = calendar.component(.month, from: date)
         let day = calendar.component(.day, from: date)
+        let year = calendar.component(.year, from: date)
 
         // Format: MM/DD (with leading zeros)
         let monthString = String(format: "%02d", month)
@@ -32,7 +33,7 @@ class WikipediaService: HistoricalEventFetching {
             ))
         }
 
-        AppLogger.general.info("Fetching historical events from Wikipedia: \(monthString)/\(dayString)")
+        AppLogger.general.info("Fetching historical events from Wikipedia: \(monthString)/\(dayString)/\(year)")
 
         let (data, response): (Data, URLResponse)
         do {
@@ -59,7 +60,7 @@ class WikipediaService: HistoricalEventFetching {
         let decoder = JSONDecoder()
         let apiResponse = try decoder.decode(WikipediaResponse.self, from: data)
 
-        // Combine all event types into a single array
+        // Combine all event types into a single array, excluding holidays
         var allEvents: [HistoricalEvent] = []
 
         // Add selected/featured events first (highest priority)
@@ -82,17 +83,17 @@ class WikipediaService: HistoricalEventFetching {
             allEvents.append(contentsOf: parseEvents(deaths, type: .death))
         }
 
-        // Add holidays
-        if let holidays = apiResponse.holidays {
-            allEvents.append(contentsOf: parseEvents(holidays, type: .holiday))
-        }
+        // Exclude holidays entirely (recurring events)
+        // Holidays are not included at all
 
-        // Sort by year (most recent first) and limit to maxCount
-        let sortedEvents = allEvents.sorted { $0.year > $1.year }.prefix(maxCount)
+        // Filter to only events matching the exact year, then limit to maxCount
+        let filteredEvents = allEvents
+            .filter { $0.year == year }
+            .prefix(maxCount)
 
-        AppLogger.general.info("Fetched \(sortedEvents.count) historical events from Wikipedia")
+        AppLogger.general.info("Fetched \(filteredEvents.count) historical events from Wikipedia for year \(year)")
 
-        return Array(sortedEvents)
+        return Array(filteredEvents)
     }
 
     func enhanceWithAI(_ events: [HistoricalEvent]) async -> [HistoricalEvent] {
@@ -125,12 +126,7 @@ class WikipediaService: HistoricalEventFetching {
     private func parseEvents(_ wikiEvents: [WikipediaEvent], type: HistoricalEvent.EventType) -> [HistoricalEvent] {
         wikiEvents.compactMap { wikiEvent in
             guard let year = wikiEvent.year else {
-                // Holidays might not have years
-                if type == .holiday {
-                    // Use current year for holidays
-                    let currentYear = Calendar.current.component(.year, from: Date())
-                    return parseEvent(wikiEvent, year: currentYear, type: type)
-                }
+                // Events without years are excluded
                 return nil
             }
 
