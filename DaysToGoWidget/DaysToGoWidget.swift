@@ -64,29 +64,48 @@ struct SimpleEntry: TimelineEntry {
 struct DaysToGoWidgetEntryView : View {
     var entry: Provider.Entry
 
+    var borderColor: Color {
+        guard let reminder = entry.reminder else { return .clear }
+        switch reminder.daysRemaining {
+        case ..<0:
+            return .red
+        case 0:
+            return .yellow
+        case 1...7:
+            return .green
+        default:
+            return .clear
+        }
+    }
+
     var body: some View {
         VStack {
             if let reminder = entry.reminder {
                 Text(reminder.title)
                     .font(.headline)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
                     .padding(.top)
-                
+
                 Spacer()
-                
+
                 Text("\(reminder.daysRemaining)")
                     .font(.system(size: 80, weight: .bold))
-                    .foregroundColor(.primary)
-                
+                    .foregroundColor(.black)
+
                 Spacer()
             } else {
                 Text("No Upcoming Reminders")
                     .font(.headline)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
             }
         }
         .containerBackground(for: .widget) {
-            colorFromString(entry.reminder?.backgroundColor) ?? Color.gray
+            ZStack {
+                colorFromString(entry.reminder?.backgroundColor) ?? Color.gray
+
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(borderColor, lineWidth: borderColor == .clear ? 0 : 6)
+            }
         }
     }
 }

@@ -30,24 +30,25 @@ struct ReminderTile: View {
         VStack(spacing: 8) {
             Text(reminder.title)
                 .font(.title2)
+                .foregroundColor(.black)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
 
             Text(reminder.date, style: .date)
                 .font(.headline)
-                .foregroundColor(.primary)
+                .foregroundColor(.black)
 
             Text("\(reminder.daysRemaining) day\(reminder.daysRemaining == 1 ? "" : "s") left")
                 .font(.title2)
                 .bold()
-                .foregroundColor(reminder.daysRemaining < 0 ? .red : .primary)
+                .foregroundColor(.black)
         }
         .padding()
         .frame(maxWidth: .infinity, minHeight: 120)
         .background(colorFromString(reminder.backgroundColor) ?? Color(.systemGray6))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(borderColor, lineWidth: borderColor == .clear ? 0 : 3)
+                .stroke(borderColor, lineWidth: borderColor == .clear ? 0 : 6)
         )
         .cornerRadius(12)
         .shadow(radius: 2)
