@@ -24,12 +24,6 @@ struct ReminderListView: View {
                     .ignoresSafeArea()
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Your Reminders")
-                        .font(.largeTitle)
-                        .bold()
-                        .padding(.horizontal)
-                        .padding(.top, 16)
-
                     // Segmented Control
                     Picker("View Mode", selection: $viewModel.selectedView) {
                         Text("Reminders").tag(ReminderListViewModel.ReminderViewMode.reminders)
@@ -37,7 +31,8 @@ struct ReminderListView: View {
                     }
                     .pickerStyle(.segmented)
                     .padding(.horizontal)
-                    .padding(.vertical, 12)
+                    .padding(.top, 16)
+                    .padding(.bottom, 12)
 
                     if viewModel.displayedReminders.isEmpty {
                         Spacer()

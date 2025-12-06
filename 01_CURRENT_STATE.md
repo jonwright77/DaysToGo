@@ -28,7 +28,7 @@
 - **Implemented**:
     - **Onboarding Flow**: First-time users see a beautiful 3-page onboarding experience that collects firstName, surname, and country via structured inputs. Page 2 features separate text fields for first name (required) and surname (optional). Page 3 provides a wheel-style country picker with 40+ countries sorted alphabetically. The onboarding uses a full-screen modal with smooth page transitions, validation, and proper completion tracking.
     - **User Profile Management**: Users can view and edit their profile (firstName, surname, country) through Settings → Profile. The profile form includes separate name fields and a country picker matching the onboarding experience. Profile data is persisted via UserDefaults and displayed throughout the app for personalization (fullName in Settings menu, firstName in greetings).
-    - **Reminders/History Split View**: The main list view features a segmented control to switch between "Reminders" (today and future events) and "History" (past events). Future reminders are sorted earliest to latest, while past reminders are sorted most recent to earliest. Each view has contextual empty states.
+    - **Reminders/History Split View**: The main list view features a segmented control at the top to switch between "Reminders" (today and future events) and "History" (past events). Future reminders are sorted earliest to latest, while past reminders are sorted most recent to earliest. Each view has contextual empty states. The view has a clean, minimal design with the segmented control as the primary navigation element.
     - **iCloud Sync**: Reminders are automatically synced across devices using CloudKit.
     - **Pull-to-Refresh**: Users can manually refresh the reminder list by pulling down, triggering a CloudKit sync with visual feedback.
     - **Home Screen Widget**: A widget is available to show upcoming reminders, fetching data from the **shared App Group container** for fast, offline-capable display. The widget includes data freshness validation and warns when data is stale (over 1 hour old).
@@ -153,3 +153,12 @@
 - Past reminders show "Showing data from this day" caption for clarity
 - Makes History view meaningful by showing actual event day data instead of calculated future dates
 - See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
+
+### November 2025 - UI Refinement: Header Removal
+
+**Cleaner List View Design**
+- Removed "Your Reminders" large title header from main list view
+- Segmented control now appears directly at the top of the view
+- More space for reminder content
+- Cleaner, more minimal design aesthetic
+- Navigation bar already displays "Days To Go" app title
