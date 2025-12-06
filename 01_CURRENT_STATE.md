@@ -37,10 +37,11 @@
     - **Reminder Detail**: `ReminderDetailView` shows details for a selected reminder, including an optional description.
     - **Countdown Calculation**: The `Reminder` model includes a `daysRemaining` computed property.
     - **Past-Date Logic**: A `reflectionDate` computed property calculates the date in the past corresponding to the "days remaining" count.
-    - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the calculated `reflectionDate`.
-    - **Calendar Fetching**: `CalendarService` fetches calendar events for the `reflectionDate`.
-    - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the `reflectionDate`, showing events, births, and deaths that match the exact year of the reflection date. Recurring holidays are excluded to focus on unique historical events. No API key required, completely free with unlimited access.
-    - **Location Tracking**: `LocationService` tracks location changes in the background using CoreLocation, building a detailed history of user movements over time. Location data for the `reflectionDate` is displayed on an interactive map in the reminder detail view. Uses continuous location updates with 20-meter distance filter for detailed tracking, automatically records the first location of each day, stores last 90 days of data locally, and filters poor accuracy locations (except for daily first entries).
+    - **Smart Date Selection**: `ReminderDetailViewModel` uses different dates based on reminder status - for future/today reminders (Reminders view), it uses the reflection date to show corresponding past data; for past reminders (History view), it uses the actual reminder date to show what happened on that day.
+    - **Photo Fetching**: `PhotoService` fetches images from the user's photo library for the appropriate date (reflection date for future events, reminder date for past events).
+    - **Calendar Fetching**: `CalendarService` fetches calendar events for the appropriate date (reflection date for future events, reminder date for past events).
+    - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the appropriate date, showing events, births, and deaths that match the exact year. Recurring holidays are excluded to focus on unique historical events. No API key required, completely free with unlimited access.
+    - **Location Tracking**: `LocationService` tracks location changes in the background using CoreLocation, building a detailed history of user movements over time. Location data for the appropriate date is displayed on an interactive map in the reminder detail view. Uses continuous location updates with 20-meter distance filter for detailed tracking, automatically records the first location of each day, stores last 90 days of data locally, and filters poor accuracy locations (except for daily first entries).
     - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Display Options, Calendars), plus app version information. Display Options allow users to toggle visibility of Photos, Calendar Events, On This Day, and Location sections in reminder details.
     - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
     - **Splash Screen**: A custom splash screen is displayed on app launch.
@@ -139,4 +140,16 @@
 - Contextual empty states for each view mode
 - Current day events (daysRemaining = 0) appear in Reminders list
 - View selection managed by ReminderListViewModel with published selectedView property
+- See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
+
+### November 2025 - Smart Date Selection for History View
+
+**Context-Aware Data Fetching**
+- **Reminders view**: Uses reflection date to show what happened X days ago (unchanged)
+- **History view**: Uses actual reminder date to show what happened on that day
+- ReminderDetailViewModel.dateForDataFetching computed property intelligently selects appropriate date
+- Affects all data types: Photos, Calendar Events, Historical Events, Location
+- ReminderDetailView displays different date layouts for past vs future reminders
+- Past reminders show "Showing data from this day" caption for clarity
+- Makes History view meaningful by showing actual event day data instead of calculated future dates
 - See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation

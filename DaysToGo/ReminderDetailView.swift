@@ -25,7 +25,20 @@ struct ReminderDetailView: View {
                     .font(.title)
                     .bold()
 
-                if let reflectionDate = viewModel.reminder.reflectionDate {
+                // For past reminders (History), show the reminder date and what data is being displayed for
+                // For future reminders, show reflection date, days remaining, and reminder date
+                if viewModel.reminder.daysRemaining < 0 {
+                    // Past event - show the actual reminder date
+                    VStack(spacing: 8) {
+                        Text(viewModel.reminder.date.formatted(date: .long, time: .omitted))
+                            .font(.headline)
+                        Text("Showing data from this day")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal)
+                } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                    // Future/today event - show reflection date, days, and reminder date
                     HStack {
                         Text(reflectionDate.formatted(date: .long, time: .omitted))
                         Spacer()

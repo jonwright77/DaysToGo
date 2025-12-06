@@ -856,3 +856,102 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/ViewModels/ReminderListViewModel.swift` (filtering logic and view mode)
      - `DaysToGo/ReminderListView.swift` (segmented control and display logic)
      - `01_CURRENT_STATE.md` (features, architecture, recent changes)
+
+6. **Smart Date Selection for History View Data Fetching**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: After implementing the Reminders/History split, the History view was using reflection dates which created confusing results. For a past event like "Birthday on Nov 20, 2024", the reflection date would calculate a future date, showing no photos/data. Users wanted to see what actually happened ON the event day, not some calculated reflection date.
+   - **Summary**: Implemented context-aware date selection in ReminderDetailViewModel. For future/today reminders, continues using reflection date (existing behavior). For past reminders (History view), uses the actual reminder date to fetch all data. This makes the History view meaningful by showing photos, calendar events, and location from the actual event day.
+   - **ViewModel Changes** (`ReminderDetailViewModel.swift`):
+     - **New Computed Property** (lines 40-51): `dateForDataFetching`
+       - Checks `reminder.daysRemaining < 0` to detect past events
+       - Returns `reminder.date` for past events (actual event day)
+       - Returns `reminder.reflectionDate` for future/today events (reflection logic)
+     - **Updated Method** (line 116): `loadPhotosAndCalendarEvents()`
+       - Changed from `guard let reflectionDate = reminder.reflectionDate`
+       - To `guard let fetchDate = dateForDataFetching`
+       - All service calls now use `fetchDate` instead of hardcoded `reflectionDate`
+   - **Data Fetching Updates**:
+     - **Photos** (line 135): `photoService.fetchPhotos(from: fetchDate, ...)`
+     - **Calendar Events** (line 157): `calendarService.fetchEvents(from: fetchDate, ...)`
+     - **Historical Events** (line 176): `historyService.fetchEvents(from: fetchDate, ...)`
+     - **Location** (line 196): `locationService.fetchLocations(from: fetchDate, ...)`
+   - **View Changes** (`ReminderDetailView.swift`):
+     - **Conditional Date Display** (lines 28-52):
+       - Past reminders (daysRemaining < 0):
+         - Shows reminder date prominently
+         - Adds caption: "Showing data from this day"
+         - Centered VStack layout for clarity
+       - Future/today reminders (daysRemaining >= 0):
+         - Shows traditional HStack: Reflection date ← Days → Reminder date
+         - Unchanged from original behavior
+   - **Date Logic by Reminder Status**:
+     - **Past (History view)**: daysRemaining < 0
+       - Date used: `reminder.date` (actual event date)
+       - Display: "November 20, 2024" + "Showing data from this day"
+       - Data shown: Photos/calendar/events/location from Nov 20, 2024
+     - **Today**: daysRemaining = 0
+       - Date used: `reminder.reflectionDate` (1 year ago)
+       - Display: "Nov 26, 2023 ← 0 Days → Nov 26, 2024"
+       - Data shown: Photos/calendar/events/location from Nov 26, 2023
+     - **Future (Reminders view)**: daysRemaining > 0
+       - Date used: `reminder.reflectionDate` (X days ago)
+       - Display: "Oct 27, 2024 ← 30 Days → Nov 26, 2024"
+       - Data shown: Photos/calendar/events/location from Oct 27, 2024
+   - **User Experience Impact**:
+     - **Before (Past reminders)**:
+       - Birthday on Nov 20, 2024 (6 days ago)
+       - Used reflection date: Dec 2, 2024 (6 days in future)
+       - Showed: No photos (date in future)
+       - Confusing and unhelpful
+     - **After (Past reminders)**:
+       - Birthday on Nov 20, 2024 (6 days ago)
+       - Uses reminder date: Nov 20, 2024 (actual day)
+       - Shows: Photos from the birthday ✓
+       - Meaningful and intuitive
+   - **Example Scenarios**:
+     - **Wedding on Nov 20, 2024** (past):
+       - Opens in History view
+       - Shows: "November 20, 2024" + "Showing data from this day"
+       - Displays: Wedding day photos, calendar events, location
+     - **Anniversary in 30 days** (future):
+       - Opens in Reminders view
+       - Shows: "Oct 27, 2024 ← 30 Days → Nov 26, 2024"
+       - Displays: What you were doing 30 days ago
+     - **Birthday today** (0 days):
+       - Opens in Reminders view (daysRemaining = 0)
+       - Shows: "Nov 26, 2023 ← 0 Days → Nov 26, 2024"
+       - Displays: What you were doing on this day last year
+   - **Technical Implementation**:
+     - Computed property recalculates when reminder changes
+     - Single source of truth for date selection logic
+     - No data duplication or redundant state
+     - Clean separation: ViewModel handles logic, View handles presentation
+   - **Consistency Across Data Types**:
+     - All four data types use same date selection logic:
+       - Photos from the appropriate date
+       - Calendar events from the appropriate date
+       - Historical events from the appropriate date
+       - Location data from the appropriate date
+     - Ensures cohesive, meaningful data display
+   - **UI Clarity**:
+     - Past reminders get explanatory caption
+     - Future reminders maintain familiar layout
+     - Users understand what date's data they're viewing
+     - No confusion about reflection vs reminder dates
+   - **Benefits**:
+     - **Intuitive History**: See what happened on the actual event day
+     - **Meaningful Data**: Photos and events from the day that matters
+     - **Clear Context**: Caption explains what you're viewing
+     - **Preserved Reflection**: Future reminders unchanged (still useful)
+     - **Unified Logic**: Single computed property handles all cases
+   - **Design Decisions**:
+     - Past events use reminder date (the day itself)
+     - Future events use reflection date (maintain reflection concept)
+     - Today (0 days) uses reflection date (show last year's data)
+     - Caption only shown for past events (avoid clutter)
+     - Computed property in ViewModel (business logic belongs there)
+   - **Files Modified**:
+     - `DaysToGo/ViewModels/ReminderDetailViewModel.swift` (dateForDataFetching logic)
+     - `DaysToGo/ReminderDetailView.swift` (conditional date display)
+     - `01_CURRENT_STATE.md` (features and recent changes)

@@ -37,6 +37,19 @@ class ReminderDetailViewModel: ObservableObject {
     private var cachedReflectionDate: Date?
     private var cachedCalendarIDs: Set<String>?
 
+    /// Returns the appropriate date for fetching data:
+    /// - For past reminders (History view): Uses the actual reminder date
+    /// - For future/today reminders (Reminders view): Uses the reflection date
+    var dateForDataFetching: Date? {
+        if reminder.daysRemaining < 0 {
+            // Past event - use the actual reminder date to show what happened on that day
+            return reminder.date
+        } else {
+            // Future/today event - use the reflection date to show what happened on the corresponding past date
+            return reminder.reflectionDate
+        }
+    }
+
     /// Initializes the view model with explicit service dependencies.
     /// - Parameters:
     ///   - reminder: The reminder to display.
@@ -100,18 +113,18 @@ class ReminderDetailViewModel: ObservableObject {
     }
 
     func loadPhotosAndCalendarEvents(calendarPrefs: CalendarPreferences) {
-        guard let reflectionDate = reminder.reflectionDate else { return }
+        guard let fetchDate = dateForDataFetching else { return }
 
         let calendarIDSet = calendarPrefs.enabledCalendarIDs
 
         // Check if we need to reload data
-        let shouldReloadPhotos = cachedReflectionDate != reflectionDate
-        let shouldReloadEvents = cachedReflectionDate != reflectionDate || cachedCalendarIDs != calendarIDSet
-        let shouldReloadHistory = cachedReflectionDate != reflectionDate
-        let shouldReloadLocations = cachedReflectionDate != reflectionDate
+        let shouldReloadPhotos = cachedReflectionDate != fetchDate
+        let shouldReloadEvents = cachedReflectionDate != fetchDate || cachedCalendarIDs != calendarIDSet
+        let shouldReloadHistory = cachedReflectionDate != fetchDate
+        let shouldReloadLocations = cachedReflectionDate != fetchDate
 
         // Update cache keys
-        cachedReflectionDate = reflectionDate
+        cachedReflectionDate = fetchDate
         cachedCalendarIDs = calendarIDSet
 
         if shouldReloadPhotos {
@@ -119,7 +132,7 @@ class ReminderDetailViewModel: ObservableObject {
                 isLoadingPhotos = true
                 defer { isLoadingPhotos = false }
                 do {
-                    reflectionPhotos = try await photoService.fetchPhotos(from: reflectionDate, maxCount: 4)
+                    reflectionPhotos = try await photoService.fetchPhotos(from: fetchDate, maxCount: 4)
                 } catch let error as AppError {
                     if self.alertError == nil {
                         self.alertError = error
@@ -141,7 +154,7 @@ class ReminderDetailViewModel: ObservableObject {
                     let enabledCalendars = allCalendars.filter {
                         calendarIDSet.contains($0.calendarIdentifier)
                     }
-                    let events = try await calendarService.fetchEvents(from: reflectionDate, in: enabledCalendars)
+                    let events = try await calendarService.fetchEvents(from: fetchDate, in: enabledCalendars)
                     calendarEvents = events.map { CalendarEventViewModel(event: $0) }
                 } catch let error as AppError {
                     if self.alertError == nil {
@@ -160,7 +173,7 @@ class ReminderDetailViewModel: ObservableObject {
                 isLoadingHistory = true
                 defer { isLoadingHistory = false }
                 do {
-                    var events = try await historyService.fetchEvents(from: reflectionDate, maxCount: 10)
+                    var events = try await historyService.fetchEvents(from: fetchDate, maxCount: 10)
                     // Enhance with AI summaries (iOS 18+ only, no-op on older versions)
                     events = await historyService.enhanceWithAI(events)
                     historicalEvents = events
@@ -180,9 +193,9 @@ class ReminderDetailViewModel: ObservableObject {
                 isLoadingLocations = true
                 defer { isLoadingLocations = false }
                 do {
-                    let locations = try await locationService.fetchLocations(from: reflectionDate, maxCount: 50)
+                    let locations = try await locationService.fetchLocations(from: fetchDate, maxCount: 50)
                     self.locationPoints = locations
-                    AppLogger.general.info("Fetched \(locations.count) location points for reflection date")
+                    AppLogger.general.info("Fetched \(locations.count) location points for fetch date")
                 } catch {
                     // Silently fail for locations - not critical, may not have data yet
                     AppLogger.general.error("Failed to fetch locations: \(error.localizedDescription)")
