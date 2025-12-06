@@ -68,8 +68,8 @@
 ## UX/UI Snapshot
 
 - **SwiftUI Patterns**: The app uses standard SwiftUI components like `NavigationView`, `NavigationStack`, `LazyVStack`, `Form`, and presents modal sheets for adding/editing reminders. Sheet-presented views (AddReminderView, EditReminderView, SettingsView) properly use NavigationStack to provide navigation context for toolbar buttons.
-- **Layout & Components**: `ReminderTile` is a well-defined, reusable component for the main list, now displayed full-width with larger fonts for the title and date. The detail view is a simple vertical stack. The main list view has a single, clean title. `ReminderFormView` provides a shared, reusable form component used by both Add and Edit views.
-- **UI Polish**: Loading indicators (`ProgressView`) are now displayed during asynchronous data fetching in `ReminderDetailView`. Empty states for photos and calendar events have been improved with more engaging visuals and descriptive text. The widget now uses the `containerBackground` API for proper display. The color picker for reminders is now a visual, tappable row of colored circles. Error alerts display context-appropriate messages with proper recovery suggestions.
+- **Layout & Components**: `ReminderTile` is a well-defined, reusable component for the main list, now displayed full-width with larger fonts for the title and date. All text is rendered in black for consistent readability across pastel backgrounds. Colored borders (6pt thick) indicate urgency: red for overdue, yellow for today, green for within 7 days. The detail view is a simple vertical stack. The main list view has a single, clean title. `ReminderFormView` provides a shared, reusable form component used by both Add and Edit views.
+- **UI Polish**: Loading indicators (`ProgressView`) are now displayed during asynchronous data fetching in `ReminderDetailView`. Empty states for photos and calendar events have been improved with more engaging visuals and descriptive text. The widget uses the `containerBackground` API for proper display with black text on pastel backgrounds. The color picker for reminders is now a visual, tappable row of colored circles. Error alerts display context-appropriate messages with proper recovery suggestions.
 - **Accessibility**: Explicit accessibility labels and hints have been added to key interactive elements across `ReminderListView`, `ReminderDetailView`, `ReminderTile`, `AddReminderView`, and `EditReminderView`, improving the experience for VoiceOver users.
 - **Localization**: All user-facing strings are hardcoded in English. The project is not set up for localization.
 - **Assets**: The project includes an `AppIcon` and an `AccentColor` in `Assets.xcassets`.
@@ -118,3 +118,13 @@
 - Preferences persist via UserDefaults and default to all enabled
 - Provides privacy and customization control over reminder detail views
 - See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
+
+### November 2025 - UI Improvements for Reminder Tiles and Widgets
+
+**Enhanced Visual Consistency and Readability**
+- **Reminder Tiles**: All text now renders in black for consistent readability on pastel backgrounds
+- **Reminder Tiles**: Colored borders increased from 3pt to 6pt for better urgency visibility
+- **Reminder Tiles**: Border colors indicate urgency (red=overdue, yellow=today, green=within 7 days)
+- **Home Screen Widget**: Text changed to black for consistent appearance
+- **Home Screen Widget**: No borders for cleaner, simpler widget design
+- Improved contrast and readability across both light and dark mode

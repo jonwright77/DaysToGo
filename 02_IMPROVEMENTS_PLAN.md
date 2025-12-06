@@ -705,3 +705,65 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - **New**: `DaysToGo/ReminderDisplayPreferences.swift`, `DaysToGo/ReminderDisplaySettingsView.swift`
      - **Modified**: `DaysToGo/SettingsView.swift`, `DaysToGo/ReminderDetailView.swift`, `DaysToGo/DaysToGoApp.swift`, `DaysToGo/ReminderListView.swift`
      - **Documentation**: `01_CURRENT_STATE.md` (features, data model, recent changes)
+
+4. **UI Improvements for Reminder Tiles and Widgets**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: The original text colors used `.primary` which adapted to light/dark mode but sometimes lacked contrast against pastel backgrounds. Borders were thin (3pt) and didn't stand out enough to quickly identify urgent reminders. Users wanted consistent black text for better readability and thicker borders for clearer urgency indicators.
+   - **Summary**: Updated ReminderTile and widget UI to use black text for all elements, increased border thickness from 3pt to 6pt on reminder tiles, and removed borders from widgets for a cleaner appearance. These changes improve readability, visual consistency, and urgency recognition.
+   - **Reminder Tile Changes** (`ReminderTile.swift`):
+     - **Text Color**: Changed all text from `.primary`/conditional colors to `.foregroundColor(.black)`
+       - Title text: Now black (line 33)
+       - Date text: Now black (line 39)
+       - Days remaining text: Now black (line 44) - previously red for overdue
+     - **Border Thickness**: Increased from 3pt to 6pt (line 51)
+     - **Border Logic**: Unchanged - still shows red/yellow/green based on urgency
+   - **Widget Changes** (`DaysToGoWidget.swift`):
+     - **Text Color**: Changed all text to `.foregroundColor(.black)`
+       - Title text: Now black (line 72)
+       - Days remaining: Now black (line 79)
+       - Empty state: Now black (line 85)
+     - **Border**: Removed entirely for cleaner widget appearance
+     - Widget borders didn't look good in the small widget format
+   - **Border Color Logic** (unchanged for tiles):
+     - **Red**: Overdue reminders (negative days remaining)
+     - **Yellow**: Due today (0 days remaining)
+     - **Green**: Due within 7 days (1-7 days remaining)
+     - **Clear**: More than 7 days away (no urgency border)
+   - **Visual Benefits**:
+     - **Better Contrast**: Black text on pastel backgrounds is always readable
+     - **Consistency**: Same text color across all reminder tiles
+     - **No Dark Mode Issues**: Black text works in both light and dark mode
+     - **Thicker Borders**: 2x thickness (3pt → 6pt) makes urgency immediately visible
+     - **Quick Scanning**: Easy to spot urgent reminders from colored borders
+   - **User Experience Impact**:
+     - **Before**: Subtle gray text, thin borders, adaptive colors
+     - **After**: Bold black text, thick borders, strong visual hierarchy
+     - At-a-glance urgency recognition from thicker colored borders
+     - Improved readability for users with visual impairments
+     - Consistent appearance regardless of system settings
+   - **Widget Design Philosophy**:
+     - Widgets prioritize simplicity and clarity
+     - Black text on colored background without borders
+     - Clean, minimal design appropriate for home screen
+     - Different from in-app tiles which benefit from borders
+   - **Code Changes**:
+     - `ReminderTile.swift`:
+       - Line 33: `.foregroundColor(.black)` on title
+       - Line 39: `.foregroundColor(.black)` on date
+       - Line 44: `.foregroundColor(.black)` on days remaining
+       - Line 51: `lineWidth: borderColor == .clear ? 0 : 6` (increased from 3)
+     - `DaysToGoWidget.swift`:
+       - Line 72: `.foregroundColor(.black)` on title
+       - Line 79: `.foregroundColor(.black)` on days remaining
+       - Line 85: `.foregroundColor(.black)` on empty state
+       - Removed: borderColor computed property, ZStack, RoundedRectangle border
+   - **Design Considerations**:
+     - Black text provides maximum contrast on light pastel colors
+     - 6pt borders are thick enough to be noticed but not overwhelming
+     - Widgets kept simple without borders to avoid cluttered appearance
+     - Consistent color scheme across app and widget (black text, pastel backgrounds)
+   - **Files Modified**:
+     - `DaysToGo/ReminderTile.swift` (text colors and border thickness)
+     - `DaysToGoWidget/DaysToGoWidget.swift` (text colors, removed borders)
+     - `01_CURRENT_STATE.md` (UX/UI section and recent changes)
