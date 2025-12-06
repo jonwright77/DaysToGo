@@ -1007,3 +1007,42 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
    - **Files Modified**:
      - `DaysToGo/ReminderListView.swift` (removed header, adjusted padding)
      - `01_CURRENT_STATE.md` (features and recent changes)
+
+8. **About Section Developer Information**
+   - **Status**: ✅ Completed
+   - **Priority**: Low
+   - **Rationale**: The About section in Settings contained only version information. Adding developer and technology information provides proper attribution and helps users understand who built the app and what technologies power it.
+   - **Summary**: Added two new rows to the About section in Settings: Developer (Jon Wright) and Built with (SwiftUI & CloudKit). These rows follow the same visual pattern as the existing Version row.
+   - **View Changes** (`SettingsView.swift`):
+     - **Developer Row** (lines 66-74):
+       - Icon: "person.circle" (system image)
+       - Label: "Developer"
+       - Value: "Jon Wright" (secondary text color)
+     - **Built With Row** (lines 76-84):
+       - Icon: "hammer.circle" (system image)
+       - Label: "Built with"
+       - Value: "SwiftUI & CloudKit" (secondary text color)
+   - **Visual Structure**:
+     - Consistent with existing About section pattern
+     - Icon on left (28pt frame width, accent color)
+     - Label in primary text
+     - Value right-aligned in secondary text color
+     - All three rows (Version, Developer, Built with) in single About section
+   - **Content Details**:
+     - **Developer**: "Jon Wright" - App creator attribution
+     - **Technology Stack**: "SwiftUI & CloudKit" - Core technologies
+     - Provides transparency about app development
+     - Professional attribution and technology disclosure
+   - **User Experience**:
+     - Easy to find: Settings → About section
+     - Professional presentation with system icons
+     - Consistent with iOS Settings conventions
+     - Informative without being intrusive
+   - **Design Decisions**:
+     - Placed in existing About section (not new section)
+     - Used system icons matching iOS design language
+     - Secondary text color for values (matches Version row)
+     - Simple, concise technology description
+     - No external links (purely informational)
+   - **Files Modified**:
+     - `DaysToGo/SettingsView.swift` (added developer and technology rows)
