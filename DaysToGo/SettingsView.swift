@@ -62,6 +62,26 @@ struct SettingsView: View {
                         Text(appVersion)
                             .foregroundColor(.secondary)
                     }
+
+                    HStack {
+                        Image(systemName: "person.circle")
+                            .foregroundColor(.accentColor)
+                            .frame(width: 28)
+                        Text("Developer")
+                        Spacer()
+                        Text("Jon Wright")
+                            .foregroundColor(.secondary)
+                    }
+
+                    HStack {
+                        Image(systemName: "hammer.circle")
+                            .foregroundColor(.accentColor)
+                            .frame(width: 28)
+                        Text("Built with")
+                        Spacer()
+                        Text("SwiftUI & CloudKit")
+                            .foregroundColor(.secondary)
+                    }
                 } header: {
                     Text("About")
                 }
