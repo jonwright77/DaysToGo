@@ -767,3 +767,92 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/ReminderTile.swift` (text colors and border thickness)
      - `DaysToGoWidget/DaysToGoWidget.swift` (text colors, removed borders)
      - `01_CURRENT_STATE.md` (UX/UI section and recent changes)
+
+5. **Reminders/History Split View with Segmented Control**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: Users wanted to separate active upcoming reminders from past events to reduce clutter and improve focus. A single mixed list made it difficult to distinguish between what needs attention (future) and what has already passed (history). Splitting into two views provides better organization and context-appropriate sorting.
+   - **Summary**: Implemented a segmented control at the top of the reminder list to switch between "Reminders" (today and future events) and "History" (past events). Each view has its own sorting logic and empty states. The feature uses ViewModel filtering to efficiently separate reminders based on daysRemaining.
+   - **ViewModel Changes** (`ReminderListViewModel.swift`):
+     - **New Enum** (lines 18-21): `ReminderViewMode` with cases for `.reminders` and `.history`
+     - **Published Property** (line 16): `@Published var selectedView: ReminderViewMode = .reminders`
+     - **Computed Properties**:
+       - `futureReminders` (lines 26-29): Filters `daysRemaining >= 0`, sorted by date ascending (earliest first)
+       - `pastReminders` (lines 31-34): Filters `daysRemaining < 0`, sorted by date descending (most recent first)
+       - `displayedReminders` (lines 36-43): Returns appropriate list based on `selectedView`
+   - **View Changes** (`ReminderListView.swift`):
+     - **Segmented Control** (lines 33-40): Picker with `.segmented` style bound to `viewModel.selectedView`
+     - **List Display** (line 59): Changed from `viewModel.reminders` to `viewModel.displayedReminders`
+     - **Empty States** (lines 42-54): Contextual messages and icons based on selected view
+   - **Date Filtering Logic**:
+     - **Reminders view (daysRemaining >= 0)**:
+       - Today: 0 days remaining → Included
+       - Future: Positive days remaining → Included
+       - Sorted: Earliest date first (upcoming events at top)
+     - **History view (daysRemaining < 0)**:
+       - Past: Negative days remaining → Included
+       - Sorted: Most recent date first (latest past events at top)
+   - **Sorting Strategy**:
+     - Different sort orders optimize for each context
+     - Reminders: Ascending (see what's coming next)
+     - History: Descending (see what just happened)
+     - Both provide intuitive chronological browsing
+   - **Empty State Messages**:
+     - **Reminders empty**:
+       - Icon: "calendar.badge.exclamationmark"
+       - Title: "No upcoming reminders"
+       - Subtitle: "Tap + to add a reminder"
+     - **History empty**:
+       - Icon: "clock.arrow.circlepath"
+       - Title: "No past reminders"
+       - Subtitle: "Past reminders will appear here"
+   - **User Experience**:
+     - **Default View**: Opens to Reminders (most common use case)
+     - **View Switching**: Instant response when tapping segments
+     - **Session Persistence**: Selection maintained during app session
+     - **Visual Feedback**: Smooth animated transitions between views
+     - **Pull-to-Refresh**: Works in both views
+   - **Example Scenarios**:
+     - Wedding in 30 days → Appears in Reminders, near top if soonest
+     - Birthday today (0 days) → Appears in Reminders with yellow border
+     - Anniversary 5 days ago (-5 days) → Appears in History at top (most recent)
+     - Trip in 6 months → Appears in Reminders, lower in list
+   - **UI Layout**:
+     ```
+     ┌──────────────────────┐
+     │ Your Reminders       │ (Title)
+     ├──────────────────────┤
+     │ [Reminders][History] │ (Segmented Control)
+     ├──────────────────────┤
+     │ Reminder Tile 1      │
+     │ Reminder Tile 2      │
+     │ ...                  │
+     └──────────────────────┘
+     ```
+   - **Technical Implementation**:
+     - Uses SwiftUI Picker with `.segmented` style
+     - ViewModel computed properties recalculate on reminder changes
+     - Efficient filtering without duplicating data
+     - Published property triggers automatic view updates
+     - Clean separation of concerns (filtering in ViewModel, presentation in View)
+   - **Performance Considerations**:
+     - Computed properties only recalculate when `reminders` changes
+     - No redundant data storage
+     - Efficient sorting using Swift's native `sorted()`
+     - Minimal memory overhead
+   - **Benefits**:
+     - **Focus**: Reminders view shows only what needs attention
+     - **Clarity**: Easy to see what's coming vs what's passed
+     - **Organization**: Natural separation of active and historical data
+     - **Context**: Different sorting for different purposes
+     - **Simplicity**: Single tap to switch views
+   - **Design Decisions**:
+     - Today (0 days) placed in Reminders, not History
+     - Reminders sorted ascending (traditional calendar approach)
+     - History sorted descending (most recent first, like news feeds)
+     - Default to Reminders (primary use case)
+     - Segmented control instead of tabs (iOS standard pattern)
+   - **Files Modified**:
+     - `DaysToGo/ViewModels/ReminderListViewModel.swift` (filtering logic and view mode)
+     - `DaysToGo/ReminderListView.swift` (segmented control and display logic)
+     - `01_CURRENT_STATE.md` (features, architecture, recent changes)

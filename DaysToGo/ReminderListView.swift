@@ -23,27 +23,40 @@ struct ReminderListView: View {
                 Color(.systemGroupedBackground)
                     .ignoresSafeArea()
 
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text("Your Reminders")
                         .font(.largeTitle)
                         .bold()
                         .padding(.horizontal)
+                        .padding(.top, 16)
 
-                    if viewModel.reminders.isEmpty {
+                    // Segmented Control
+                    Picker("View Mode", selection: $viewModel.selectedView) {
+                        Text("Reminders").tag(ReminderListViewModel.ReminderViewMode.reminders)
+                        Text("History").tag(ReminderListViewModel.ReminderViewMode.history)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+
+                    if viewModel.displayedReminders.isEmpty {
                         Spacer()
                         VStack(spacing: 16) {
-                            Image(systemName: "calendar.badge.exclamationmark")
+                            Image(systemName: viewModel.selectedView == .reminders ? "calendar.badge.exclamationmark" : "clock.arrow.circlepath")
                                 .font(.system(size: 50))
                                 .foregroundColor(.gray)
-                            Text("No reminders yet")
+                            Text(viewModel.selectedView == .reminders ? "No upcoming reminders" : "No past reminders")
                                 .font(.title3)
+                                .foregroundColor(.secondary)
+                            Text(viewModel.selectedView == .reminders ? "Tap + to add a reminder" : "Past reminders will appear here")
+                                .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
                         Spacer()
                     } else {
                         ScrollView {
                             LazyVStack(spacing: 16) {
-                                ForEach(viewModel.reminders.sorted(by: { $0.date < $1.date })) { reminder in
+                                ForEach(viewModel.displayedReminders) { reminder in
                                     NavigationLink(destination: ReminderDetailView(reminder: reminder, store: reminderStore)) {
                                         ReminderTile(reminder: reminder)
                                             .scaleEffect(didAnimate ? 1.0 : 0.95)

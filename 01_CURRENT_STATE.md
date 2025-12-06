@@ -6,7 +6,7 @@
 - **Swift/SwiftUI Versions**: The `.xcodeproj` file specifies `SWIFT_VERSION = 5.0`, but the use of modern APIs like `@Environment(\.dismiss)` and `async/await` suggests a Swift 5.5+ environment. The deployment target is set to iOS 18.5. The codebase is **Swift 6 concurrency-compliant**, with proper MainActor isolation and no data race warnings.
 - **Third-Party Dependencies**: There are no third-party dependencies evident from the project structure or `project.pbxproj` file.
 - **App Architecture**: The architecture has been refactored to a clean **MVVM (Model-View-ViewModel)** pattern with Dependency Injection.
-    - **ViewModels**: `ReminderListViewModel` and `ReminderDetailViewModel` now contain the business logic and state management for their respective views.
+    - **ViewModels**: `ReminderListViewModel` contains business logic for filtering reminders into future and past lists, with a `selectedView` published property to manage the Reminders/History view mode. `ReminderDetailViewModel` manages state for the detail view.
     - **Services**: Service protocols (`PhotoFetching`, `CalendarFetching`, `ReminderStoring`, `HistoricalEventFetching`, `LocationFetching`) are defined in `DaysToGoKit/Protocols.swift` with comprehensive documentation. Concrete services (`PhotoService`, `CalendarService`, `ReminderStore`, `WikipediaService`, `LocationService`) implement these protocols.
     - **Dependency Injection**: A centralized `ServiceContainer` class manages all service dependencies. Services can be injected via the container's shared instance or through custom instances for testing. ViewModels provide convenience initializers that use the service container by default.
 - **Data Model & Persistence**:
@@ -28,6 +28,7 @@
 - **Implemented**:
     - **Onboarding Flow**: First-time users see a beautiful 3-page onboarding experience that collects firstName, surname, and country via structured inputs. Page 2 features separate text fields for first name (required) and surname (optional). Page 3 provides a wheel-style country picker with 40+ countries sorted alphabetically. The onboarding uses a full-screen modal with smooth page transitions, validation, and proper completion tracking.
     - **User Profile Management**: Users can view and edit their profile (firstName, surname, country) through Settings → Profile. The profile form includes separate name fields and a country picker matching the onboarding experience. Profile data is persisted via UserDefaults and displayed throughout the app for personalization (fullName in Settings menu, firstName in greetings).
+    - **Reminders/History Split View**: The main list view features a segmented control to switch between "Reminders" (today and future events) and "History" (past events). Future reminders are sorted earliest to latest, while past reminders are sorted most recent to earliest. Each view has contextual empty states.
     - **iCloud Sync**: Reminders are automatically synced across devices using CloudKit.
     - **Pull-to-Refresh**: Users can manually refresh the reminder list by pulling down, triggering a CloudKit sync with visual feedback.
     - **Home Screen Widget**: A widget is available to show upcoming reminders, fetching data from the **shared App Group container** for fast, offline-capable display. The widget includes data freshness validation and warns when data is stale (over 1 hour old).
@@ -128,3 +129,14 @@
 - **Home Screen Widget**: Text changed to black for consistent appearance
 - **Home Screen Widget**: No borders for cleaner, simpler widget design
 - Improved contrast and readability across both light and dark mode
+
+### November 2025 - Reminders/History Split View
+
+**Organized List View with Timeline Separation**
+- Added segmented control to switch between "Reminders" and "History" views
+- **Reminders view**: Shows today and future events (daysRemaining >= 0), sorted earliest to latest
+- **History view**: Shows past events (daysRemaining < 0), sorted most recent to earliest
+- Contextual empty states for each view mode
+- Current day events (daysRemaining = 0) appear in Reminders list
+- View selection managed by ReminderListViewModel with published selectedView property
+- See `02_IMPROVEMENTS_PLAN.md` → "Post-Phase 14 Enhancements" for detailed documentation
