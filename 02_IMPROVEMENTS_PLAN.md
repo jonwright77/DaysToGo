@@ -1046,3 +1046,65 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - No external links (purely informational)
    - **Files Modified**:
      - `DaysToGo/SettingsView.swift` (added developer and technology rows)
+
+9. **Color Picker Expansion and Grid Layout**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: The original color picker had only 8 colors displayed in a horizontal scrolling list, which required swiping to see all options. Users wanted more color choices and a better layout that shows all colors at once without scrolling.
+   - **Summary**: Expanded the pastel color palette from 8 to 12 colors and changed the layout from horizontal scrolling to a 2-row × 6-column grid. All colors are now visible at once, improving the color selection experience.
+   - **Color Additions** (`PastelColor.swift`):
+     - **Pastel Teal** (line 19): Soft blue-green - `Color(red: 0.6, green: 0.9, blue: 0.9)`
+     - **Pastel Lavender** (line 20): Light purple/violet - `Color(red: 0.9, green: 0.8, blue: 1.0)`
+     - **Pastel Peach** (line 21): Warm peachy tone - `Color(red: 1.0, green: 0.85, blue: 0.75)`
+     - **Pastel Mint** (line 22): Fresh minty green - `Color(red: 0.7, green: 1.0, blue: 0.85)`
+   - **Layout Changes** (`ColorPickerView.swift`):
+     - **Before**: `ScrollView(.horizontal)` with `HStack`
+     - **After**: `LazyVGrid` with 6 flexible columns
+     - **Grid Configuration**: `Array(repeating: GridItem(.flexible(), spacing: 12), count: 6)`
+     - **Spacing**: 12pt between items (both horizontal and vertical)
+     - **Result**: 2 rows × 6 columns = 12 color slots (perfectly filled)
+   - **Complete Color Palette** (12 colors):
+     - **Original 8**: Blue, Green, Pink, Purple, Yellow, Orange, Red, Gray
+     - **New 4**: Teal, Lavender, Peach, Mint
+     - Covers full spectrum of pastel colors
+     - Good variety for different moods and occasions
+   - **Visual Benefits**:
+     - **No Scrolling**: All 12 colors visible at once
+     - **Organized Layout**: Clean grid presentation
+     - **Better Overview**: Easy to compare all color options
+     - **More Choices**: 50% increase in color palette (8 → 12)
+     - **Balanced Design**: Perfect 2×6 grid with no empty slots
+   - **User Experience Impact**:
+     - **Before**: 8 colors in horizontal scroll, had to swipe to see all options
+     - **After**: 12 colors in organized grid, all visible without scrolling
+     - Faster color selection (no scrolling needed)
+     - More color variety for personalization
+     - Better spatial organization for visual scanning
+   - **Color Design Philosophy**:
+     - All colors maintain consistent pastel aesthetic
+     - Soft, muted tones work well as backgrounds
+     - Black text remains readable on all color backgrounds
+     - New colors fill gaps in the color spectrum
+     - Complementary to existing palette
+   - **Technical Implementation**:
+     - Used SwiftUI `LazyVGrid` for efficient rendering
+     - Flexible grid items adapt to screen size
+     - Maintained existing selection indicators and accessibility
+     - No changes to color selection logic, just presentation
+   - **Code Changes**:
+     - `DaysToGoKit/PastelColor.swift`:
+       - Added 4 new enum cases (lines 19-22)
+       - Added 4 new color cases in switch statement (lines 44-51)
+     - `DaysToGo/ColorPickerView.swift`:
+       - Replaced `ScrollView(.horizontal)` with `LazyVGrid` (line 12)
+       - Added `columns` property with 6 flexible grid items (line 9)
+       - Updated spacing to 12pt for grid layout (line 12)
+   - **Accessibility**:
+     - All colors retain accessibility labels
+     - Selection state properly announced
+     - Grid layout maintains keyboard navigation
+     - VoiceOver-friendly color names
+   - **Files Modified**:
+     - `DaysToGoKit/PastelColor.swift` (added 4 new colors)
+     - `DaysToGo/ColorPickerView.swift` (grid layout implementation)
+     - `01_CURRENT_STATE.md` (features and recent changes)

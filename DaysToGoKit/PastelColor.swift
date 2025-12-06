@@ -16,6 +16,10 @@ public enum PastelColor: String, CaseIterable, Identifiable {
     case pastelOrange = "Pastel Orange"
     case pastelRed = "Pastel Red"
     case pastelGray = "Pastel Gray"
+    case pastelTeal = "Pastel Teal"
+    case pastelLavender = "Pastel Lavender"
+    case pastelPeach = "Pastel Peach"
+    case pastelMint = "Pastel Mint"
 
     public var id: String { self.rawValue }
 
@@ -37,6 +41,14 @@ public enum PastelColor: String, CaseIterable, Identifiable {
             return Color(red: 1.0, green: 0.6, blue: 0.6)
         case .pastelGray:
             return Color(red: 0.8, green: 0.8, blue: 0.8)
+        case .pastelTeal:
+            return Color(red: 0.6, green: 0.9, blue: 0.9)
+        case .pastelLavender:
+            return Color(red: 0.9, green: 0.8, blue: 1.0)
+        case .pastelPeach:
+            return Color(red: 1.0, green: 0.85, blue: 0.75)
+        case .pastelMint:
+            return Color(red: 0.7, green: 1.0, blue: 0.85)
         }
     }
 }

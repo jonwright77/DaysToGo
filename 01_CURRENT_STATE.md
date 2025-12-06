@@ -43,7 +43,7 @@
     - **Historical Events**: `WikipediaService` fetches "On This Day" historical events from Wikipedia's free API for the appropriate date, showing events, births, and deaths that match the exact year. Recurring holidays are excluded to focus on unique historical events. No API key required, completely free with unlimited access.
     - **Location Tracking**: `LocationService` tracks location changes in the background using CoreLocation, building a detailed history of user movements over time. Location data for the appropriate date is displayed on an interactive map in the reminder detail view. Uses continuous location updates with 20-meter distance filter for detailed tracking, automatically records the first location of each day, stores last 90 days of data locally, and filters poor accuracy locations (except for daily first entries).
     - **Settings Menu**: A hierarchical `SettingsView` with organized sections for Personal (Profile) and Data Sources (Display Options, Calendars), plus an About section with app version, developer information (Jon Wright), and technology stack (SwiftUI & CloudKit). Display Options allow users to toggle visibility of Photos, Calendar Events, On This Day, and Location sections in reminder details.
-    - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 8 pastel options.
+    - **Customizable Reminder Appearance**: Reminders can now have an optional description and a customizable background color selected from 12 pastel options displayed in a 2×6 grid layout.
     - **Splash Screen**: A custom splash screen is displayed on app launch.
 - **Gaps & TODOs**: 
     - The UI test target (`DaysToGoUITests`) contains only boilerplate code.
@@ -171,3 +171,12 @@
 - Consistent visual styling with existing About section items
 - Professional attribution with system icons (person.circle, hammer.circle)
 - Provides transparency about app creator and core technologies
+
+### December 2025 - Color Picker Enhancement
+
+**Expanded Color Palette and Grid Layout**
+- Expanded color palette from 8 to 12 pastel colors
+- Added 4 new colors: Pastel Teal, Pastel Lavender, Pastel Peach, Pastel Mint
+- Changed layout from horizontal scrolling to 2×6 grid (LazyVGrid)
+- All colors now visible without scrolling
+- Improved color selection experience with organized grid presentation
