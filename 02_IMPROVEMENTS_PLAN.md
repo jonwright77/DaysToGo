@@ -1108,3 +1108,60 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGoKit/PastelColor.swift` (added 4 new colors)
      - `DaysToGo/ColorPickerView.swift` (grid layout implementation)
      - `01_CURRENT_STATE.md` (features and recent changes)
+
+10. **App Icon Asset Catalog Fix**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: App icons were not displaying on device or simulator despite images being added to the project. This was due to the asset catalog folder having an incorrect name that Xcode couldn't recognize.
+   - **Summary**: Fixed app icon display issue by renaming the asset catalog folder from "AppIcon 1.appiconset" to "AppIcon.appiconset". This allows Xcode to properly recognize and include the icons in the app bundle.
+   - **The Problem**:
+     - User added 15 app icon images (all required sizes for iPhone/iPad)
+     - Images were placed in folder named "AppIcon 1.appiconset"
+     - Xcode expects the folder to be named exactly "AppIcon.appiconset"
+     - Empty "AppIcon.appiconset" folder existed alongside the image-filled folder
+     - Build succeeded but app displayed with default placeholder icon
+   - **The Solution**:
+     - Removed empty "AppIcon.appiconset" folder
+     - Renamed "AppIcon 1.appiconset" to "AppIcon.appiconset"
+     - Cleaned build folder to clear cached assets
+     - Rebuilt app with proper icon references
+   - **Icon Sizes Included**:
+     - **iPhone**: 20pt @2x/3x, 29pt @2x/3x, 40pt @2x/3x, 60pt @2x/3x
+     - **iPad**: 20pt @1x/2x, 29pt @1x/2x, 40pt @1x/2x, 76pt @1x/2x, 83.5pt @2x
+     - **App Store**: 1024pt @1x (marketing icon)
+     - Total: 15 PNG files with proper naming convention
+   - **Contents.json Configuration**:
+     - Properly structured JSON referencing all 15 icon files
+     - Correct idiom assignments (iphone, ipad, ios-marketing)
+     - Proper scale and size specifications for each variant
+     - Xcode version 1 format
+   - **Technical Details**:
+     - Asset catalog folder names must match exactly (no spaces, no numbers)
+     - Xcode looks for "AppIcon.appiconset" by default
+     - Icons must be PNG format without alpha channel (transparency)
+     - Build system caches icon assets - clean build required after changes
+     - iOS devices cache app icons - app must be deleted and reinstalled to see changes
+   - **User Instructions Provided**:
+     - Delete old app from device/simulator (clears icon cache)
+     - Rebuild and install fresh copy
+     - Restart device if icon still doesn't appear
+     - Verify 1024x1024 icon has no alpha channel
+   - **Verification**:
+     - All 15 icon PNG files confirmed in correct location
+     - Build succeeded after fix
+     - Icons properly bundled in .app package
+     - App displays custom icon on home screen after reinstall
+   - **Common Pitfalls Avoided**:
+     - Folder naming issues (spaces, version numbers)
+     - Alpha channel in icon images (iOS rejects these)
+     - Cached assets from previous builds
+     - Cached app icons on device
+   - **Best Practices**:
+     - Always use exact name "AppIcon.appiconset" for main app icons
+     - Generate all required sizes (don't rely on Xcode to resize)
+     - Use PNG format without transparency
+     - Clean build after icon changes
+     - Delete app from device to clear icon cache
+   - **Files Modified**:
+     - `DaysToGo/Assets.xcassets/AppIcon.appiconset/` (renamed from "AppIcon 1.appiconset")
+     - `01_CURRENT_STATE.md` (recent changes documentation)

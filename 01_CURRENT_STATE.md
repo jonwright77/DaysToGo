@@ -180,3 +180,11 @@
 - Changed layout from horizontal scrolling to 2×6 grid (LazyVGrid)
 - All colors now visible without scrolling
 - Improved color selection experience with organized grid presentation
+
+### December 2025 - App Icon Configuration Fix
+
+**Asset Catalog Correction**
+- Fixed app icon not displaying on device/simulator
+- Resolved issue where icon images were in "AppIcon 1.appiconset" instead of "AppIcon.appiconset"
+- Renamed asset catalog folder to correct name for Xcode recognition
+- All 15 icon sizes now properly configured and displaying on devices
