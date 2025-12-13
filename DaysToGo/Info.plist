@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs access to your photo library to show past images.</string>
+    <string>Days To Go displays photos from your library that were taken on reflection dates, helping you remember what you were doing when creating countdowns to future events. Photos are only accessed when viewing reminders and are never uploaded or shared.</string>
 
     <key>NSCalendarsUsageDescription</key>
-    <string>This app uses your calendar to show past events from reflection dates.</string>
+    <string>Days To Go shows calendar events from reflection dates to provide context about what was happening in your life when counting down to important events. Calendar data is only read locally and never modified or shared.</string>
 
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app tracks your location to show where you were on past dates when viewing reminders.</string>
+    <string>Days To Go displays your location history on reflection dates, showing where you were when counting down to events. Location data is stored locally and synced privately via iCloud.</string>
 
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>This app tracks your location in the background to build a history of where you've been. This allows you to see your movements on reflection dates in the future.</string>
+    <string>Days To Go builds a location history in the background so you can see where you were on reflection dates when viewing reminders. Location data is stored locally for 90 days, synced privately via your iCloud account, and never shared with third parties. You can disable location tracking in Settings at any time.</string>
 
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>This app tracks your location in the background to build a history of where you've been. This allows you to see your movements on reflection dates in the future.</string>
+    <string>Days To Go builds a location history in the background so you can see where you were on reflection dates. Location data is stored locally for 90 days, synced privately via iCloud, and never shared with third parties.</string>
 
     <key>UIBackgroundModes</key>
     <array>

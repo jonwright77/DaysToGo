@@ -49,35 +49,17 @@ struct LocationMapView: View {
     }
 
     var body: some View {
-        Map(coordinateRegion: $region, annotationItems: locationPoints) { point in
-            MapMarker(coordinate: point.coordinate, tint: .accentColor)
-        }
-        .overlay(
-            // Show path if there are multiple points
-            locationPoints.count > 1 ? AnyView(pathOverlay) : AnyView(EmptyView())
-        )
-    }
-
-    private var pathOverlay: some View {
-        GeometryReader { geometry in
-            Path { path in
-                let sortedPoints = locationPoints.sorted { $0.timestamp < $1.timestamp }
-                for (index, point) in sortedPoints.enumerated() {
-                    let screenPoint = convertToScreenPoint(point.coordinate, in: geometry.size)
-                    if index == 0 {
-                        path.move(to: screenPoint)
-                    } else {
-                        path.addLine(to: screenPoint)
-                    }
-                }
+        Map(position: .constant(.region(region))) {
+            ForEach(locationPoints) { point in
+                Marker("", coordinate: point.coordinate)
+                    .tint(Color.accentColor)
             }
-            .stroke(Color.accentColor.opacity(0.6), lineWidth: 2)
-        }
-    }
 
-    private func convertToScreenPoint(_ coordinate: CLLocationCoordinate2D, in size: CGSize) -> CGPoint {
-        let x = (coordinate.longitude - region.center.longitude + region.span.longitudeDelta / 2) / region.span.longitudeDelta * size.width
-        let y = (region.center.latitude - coordinate.latitude + region.span.latitudeDelta / 2) / region.span.latitudeDelta * size.height
-        return CGPoint(x: x, y: y)
+            // Show path if there are multiple points
+            if locationPoints.count > 1 {
+                MapPolyline(coordinates: locationPoints.sorted { $0.timestamp < $1.timestamp }.map { $0.coordinate })
+                    .stroke(Color.accentColor.opacity(0.6), lineWidth: 2)
+            }
+        }
     }
 }

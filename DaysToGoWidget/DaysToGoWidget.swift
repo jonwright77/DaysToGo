@@ -2,6 +2,7 @@ import WidgetKit
 import SwiftUI
 import CloudKit
 import DaysToGoKit
+import os
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
@@ -37,7 +38,7 @@ struct Provider: TimelineProvider {
             let hoursSinceModification = Date().timeIntervalSince(modificationDate) / 3600
             if hoursSinceModification > 1 {
                 // Data may be stale but still show it - better than nothing
-                print("Widget data is \(Int(hoursSinceModification)) hours old")
+                os_log(.info, log: OSLog.default, "Widget data is %d hours old", Int(hoursSinceModification))
             }
         }
 

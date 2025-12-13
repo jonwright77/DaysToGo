@@ -46,7 +46,7 @@ struct ProfileSettingsView: View {
                         .foregroundColor(.accentColor)
                         .frame(width: 28)
                     TextField("First Name", text: $firstName)
-                        .onChange(of: firstName) { _ in
+                        .onChange(of: firstName) {
                             hasChanges = true
                         }
                 }
@@ -56,7 +56,7 @@ struct ProfileSettingsView: View {
                         .foregroundColor(.accentColor)
                         .frame(width: 28)
                     TextField("Surname", text: $surname)
-                        .onChange(of: surname) { _ in
+                        .onChange(of: surname) {
                             hasChanges = true
                         }
                 }
@@ -67,7 +67,7 @@ struct ProfileSettingsView: View {
                         Text(country).tag(country)
                     }
                 }
-                .onChange(of: country) { _ in
+                .onChange(of: country) {
                     hasChanges = true
                 }
             } header: {
