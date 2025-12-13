@@ -52,6 +52,13 @@ All preparation tasks have been completed successfully, plus additional feature 
 - Updated accessibility labels for VoiceOver
 - More natural, intuitive user experience
 
+### 7. ✅ Enhanced Date Format with Day of Week
+- All dates now include day of week (e.g., "Saturday 13 December 2025")
+- Applied to reminder tiles and detail view
+- Detail view layout changed from horizontal to vertical for better readability
+- Provides immediate weekend/weekday context
+- Improves planning and decision-making
+
 ---
 
 ## 📋 Code Changes Made
@@ -110,6 +117,17 @@ All preparation tasks have been completed successfully, plus additional feature 
 - Added conditional display for zero days
 - Shows "Today" at 40pt font instead of "0" at 80pt font
 - Ensures proper fit in widget layout
+
+### Enhanced Date Format Implementation
+**File:** `DaysToGo/ReminderTile.swift`
+- Updated date format to include day of week
+- Changed to `.formatted(.dateTime.weekday(.wide).day().month(.wide).year())`
+- Format: "Saturday 13 December 2025"
+
+**File:** `DaysToGo/ReminderDetailView.swift`
+- Updated all three date displays (past, reflection, future)
+- Applied same weekday format to all dates
+- Changed layout from HStack to VStack for better readability with longer dates
 
 ---
 

@@ -30,7 +30,7 @@ struct ReminderDetailView: View {
                 if viewModel.reminder.daysRemaining < 0 {
                     // Past event - show the actual reminder date
                     VStack(spacing: 8) {
-                        Text(viewModel.reminder.date.formatted(date: .long, time: .omitted))
+                        Text(viewModel.reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
                             .font(.headline)
                         Text("Showing data from this day")
                             .font(.caption)
@@ -39,15 +39,14 @@ struct ReminderDetailView: View {
                     .padding(.horizontal)
                 } else if let reflectionDate = viewModel.reminder.reflectionDate {
                     // Future/today event - show reflection date, days, and reminder date
-                    HStack {
-                        Text(reflectionDate.formatted(date: .long, time: .omitted))
-                        Spacer()
+                    VStack(spacing: 12) {
+                        Text(reflectionDate.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
+                            .font(.body)
                         Text("\(viewModel.reminder.daysRemaining) Day\(viewModel.reminder.daysRemaining == 1 ? "" : "s")")
                             .fontWeight(.medium)
-                        Spacer()
-                        Text(viewModel.reminder.date.formatted(date: .long, time: .omitted))
+                        Text(viewModel.reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
+                            .font(.body)
                     }
-                    .font(.body)
                     .padding(.horizontal)
                 }
 

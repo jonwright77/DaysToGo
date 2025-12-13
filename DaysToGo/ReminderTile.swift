@@ -34,7 +34,7 @@ struct ReminderTile: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
 
-            Text(reminder.date, style: .date)
+            Text(reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
                 .font(.headline)
                 .foregroundColor(.black)
 

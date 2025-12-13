@@ -1319,3 +1319,93 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/ReminderTile.swift` (display text and accessibility)
      - `DaysToGoWidget/DaysToGoWidget.swift` (widget display logic)
      - `01_CURRENT_STATE.md` (recent changes)
+
+13. **Enhanced Date Format with Day of Week**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: Showing only the date without the day of the week requires users to mentally calculate what day events fall on. Including the day of week provides immediate context about whether an event is on a weekend or weekday, improving planning and decision-making.
+   - **Summary**: Updated all date displays throughout the app to include the full day of the week alongside the date. Format changed from "13 December 2025" to "Saturday 13 December 2025". Applied to reminder tiles and detail view dates.
+   - **Implementation Changes**:
+     - **ReminderTile.swift** (line 37):
+       - Changed from `.formatted(date: .long, time: .omitted)`
+       - To `.formatted(.dateTime.weekday(.wide).day().month(.wide).year())`
+       - Displays full weekday name before the date
+     - **ReminderDetailView.swift** (lines 33, 43, 47):
+       - Updated all three date displays (past reminder, reflection date, future reminder)
+       - Applied same format: `.formatted(.dateTime.weekday(.wide).day().month(.wide).year())`
+       - Changed layout from HStack to VStack (lines 42-50)
+       - Vertical layout accommodates longer date strings better
+   - **Date Format Components**:
+     - **weekday(.wide)**: Full day name (e.g., "Saturday", not "Sat")
+     - **day()**: Day of month (e.g., "13")
+     - **month(.wide)**: Full month name (e.g., "December", not "Dec")
+     - **year()**: Four-digit year (e.g., "2025")
+     - **Result**: "Saturday 13 December 2025"
+   - **Layout Change in Detail View**:
+     - **Before (HStack)**: Dates side-by-side horizontally
+       - Issue: Longer dates with weekdays created cramped layout
+       - Hard to read on smaller screens
+     - **After (VStack)**: Dates stacked vertically
+       - Reflection date on top
+       - Days remaining in middle
+       - Reminder date on bottom
+       - Spacing: 12pt between elements
+       - Better readability and visual hierarchy
+   - **User Experience Benefits**:
+     - **Planning Context**: Immediately see if event is weekend or weekday
+     - **No Mental Math**: Don't need to calculate day of week
+     - **Better Decisions**: "Wedding on Saturday" vs "Wedding on Tuesday" informs planning
+     - **Consistent Format**: Same format throughout entire app
+     - **Professional Appearance**: Matches calendar app standards
+   - **Examples**:
+     - **Reminder Tile**:
+       ```
+       Wedding
+       Saturday 13 December 2025
+       30 days left
+       ```
+     - **Detail View (Future Event)**:
+       ```
+       Friday 13 November 2025  (reflection date)
+       30 Days
+       Saturday 13 December 2025  (reminder date)
+       ```
+     - **Detail View (Past Event)**:
+       ```
+       Friday 6 December 2024
+       Showing data from this day
+       ```
+   - **Use Cases Enhanced**:
+     - **Weekend Events**: Users immediately see "Saturday" or "Sunday"
+     - **Work Events**: See weekday names for work-related reminders
+     - **Planning**: "Do I need to take time off work?" (weekday vs weekend)
+     - **Scheduling**: Better understanding of event timing context
+   - **Visual Impact**:
+     - Slightly longer text in tiles (minimal impact)
+     - Detail view has more vertical space (improved readability)
+     - No performance impact (date formatting is fast)
+     - Maintains existing color scheme and styling
+   - **Accessibility**:
+     - Screen readers announce full day name
+     - More context for VoiceOver users
+     - Clearer temporal information
+     - No change to existing accessibility features
+   - **Localization Ready**:
+     - Uses system date formatter
+     - Automatically adapts to user's locale
+     - Day/month names translated by system
+     - Date order respects regional preferences
+   - **Technical Notes**:
+     - SwiftUI's modern date formatting API
+     - Leverages FormatStyle for type-safe formatting
+     - No custom date formatter needed
+     - Cached by system for performance
+   - **Design Consistency**:
+     - Same format in list view and detail view
+     - Reflection dates and reminder dates use identical format
+     - Past and future events formatted consistently
+     - Professional, polished appearance
+   - **Files Modified**:
+     - `DaysToGo/ReminderTile.swift` (date format in list view)
+     - `DaysToGo/ReminderDetailView.swift` (date formats and layout change)
+     - `01_CURRENT_STATE.md` (recent changes)

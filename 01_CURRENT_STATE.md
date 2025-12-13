@@ -207,3 +207,13 @@
 - Widget uses appropriately sized font (40pt) for "Today" text
 - Provides clearer, more natural indication of current-day events
 - Updated accessibility labels to announce "Today" for VoiceOver users
+
+### December 2025 - Enhanced Date Format with Day of Week
+
+**Improved Date Readability**
+- All dates now display with day of week (e.g., "Saturday 13 December 2025")
+- Applied to reminder tiles in list view
+- Applied to both reminder date and reflection date in detail view
+- Detail view changed from horizontal to vertical layout for better readability
+- Provides better planning context (weekend vs weekday identification)
+- Format: weekday (full), day, month (full), year
