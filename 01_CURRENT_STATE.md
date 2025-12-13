@@ -32,7 +32,7 @@
     - **iCloud Sync**: Reminders are automatically synced across devices using CloudKit.
     - **Pull-to-Refresh**: Users can manually refresh the reminder list by pulling down, triggering a CloudKit sync with visual feedback.
     - **Home Screen Widget**: A widget is available to show upcoming reminders, fetching data from the **shared App Group container** for fast, offline-capable display. The widget includes data freshness validation and warns when data is stale (over 1 hour old).
-    - **CRUD for Reminders**: Users can create, view, edit, and delete reminders.
+    - **CRUD for Reminders**: Users can create, view, edit, and delete reminders. Swipe left on any reminder tile to reveal a delete button, or swipe fully for instant deletion.
     - **Reminder List**: `ReminderListView` displays reminders in a full-width list, sorted by date.
     - **Reminder Detail**: `ReminderDetailView` shows details for a selected reminder, including an optional description.
     - **Countdown Calculation**: The `Reminder` model includes a `daysRemaining` computed property.
@@ -188,3 +188,13 @@
 - Resolved issue where icon images were in "AppIcon 1.appiconset" instead of "AppIcon.appiconset"
 - Renamed asset catalog folder to correct name for Xcode recognition
 - All 15 icon sizes now properly configured and displaying on devices
+
+### December 2025 - Swipe-to-Delete Functionality
+
+**List Interaction Enhancement**
+- Added swipe-to-delete gesture for reminder tiles
+- Swipe left to reveal red delete button with trash icon
+- Full swipe gesture for instant deletion
+- Works in both Reminders and History views
+- Uses native iOS List with swipeActions for familiar UX
+- Maintains visual design with custom row insets and hidden separators

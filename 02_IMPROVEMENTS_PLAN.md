@@ -1165,3 +1165,90 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
    - **Files Modified**:
      - `DaysToGo/Assets.xcassets/AppIcon.appiconset/` (renamed from "AppIcon 1.appiconset")
      - `01_CURRENT_STATE.md` (recent changes documentation)
+
+11. **Swipe-to-Delete Gesture for Reminder Tiles**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: Users expect to be able to quickly delete items from lists using the standard iOS swipe gesture. Previously, users had to open a reminder's detail view and tap the Delete button, which required extra steps. Adding swipe-to-delete provides a familiar, efficient deletion method.
+   - **Summary**: Implemented swipe-to-delete functionality on reminder tiles in both Reminders and History views. Users can swipe left to reveal a delete button or swipe fully for instant deletion. This provides a standard iOS interaction pattern for quick item removal.
+   - **Implementation Changes**:
+     - **List Structure** (`ReminderListView.swift`):
+       - Replaced `ScrollView` + `LazyVStack` with native `List`
+       - Maintains visual appearance with custom styling
+       - Added `.swipeActions(edge: .trailing)` modifier
+       - Enabled `allowsFullSwipe: true` for quick deletion
+       - Hidden list separators with `.listRowSeparator(.hidden)`
+       - Clear background with `.listRowBackground(Color.clear)`
+       - Custom row insets: `EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)`
+       - Plain list style with `.listStyle(.plain)`
+       - Hidden scroll background with `.scrollContentBackground(.hidden)`
+     - **Delete Action**:
+       - Button with destructive role (red color)
+       - Trash icon with label
+       - Calls `viewModel.deleteReminder(reminder)`
+     - **ViewModel Method** (`ReminderListViewModel.swift`):
+       - Added `deleteReminder(_ reminder: Reminder)` method
+       - Calls `reminderStore.deleteReminder(withId: reminder.id)`
+       - Automatically syncs deletion to CloudKit
+   - **User Experience**:
+     - **Swipe left** on any reminder tile to reveal delete button
+     - **Swipe fully** to delete immediately without tapping button
+     - **Red destructive button** clearly indicates delete action
+     - **Trash icon** provides visual confirmation of action
+     - **Works in both views**: Reminders and History
+     - **Standard iOS pattern**: Familiar to all iOS users
+     - **Haptic feedback**: System-provided tactile response
+   - **Visual Design**:
+     - Maintained existing tile appearance (colors, spacing, borders)
+     - Preserved 16pt horizontal padding
+     - Kept 8pt vertical spacing between tiles
+     - No visible change to layout when not swiping
+     - Smooth animation when swipe action appears
+   - **Deletion Flow**:
+     1. User swipes left on reminder tile
+     2. Red delete button slides in from right
+     3. User taps button OR continues swipe
+     4. Reminder removed from list with animation
+     5. Data deleted from local storage
+     6. Deletion synced to CloudKit
+     7. Change propagates to all user devices
+   - **Alternative Delete Methods**:
+     - Swipe-to-delete (new): Quick, from list view
+     - Detail view delete: Still available in ReminderDetailView
+     - Both methods call same underlying store method
+   - **Technical Benefits**:
+     - Native iOS List provides built-in swipe gesture handling
+     - Automatic animation and haptic feedback
+     - Accessibility support out of the box
+     - VoiceOver announces delete action
+     - Consistent with iOS design guidelines
+   - **Code Changes**:
+     - `ReminderListView.swift` (lines 52-76):
+       - Changed from ScrollView/LazyVStack to List
+       - Added swipeActions modifier with delete button
+       - Configured list styling to match previous design
+     - `ReminderListViewModel.swift` (lines 65-67):
+       - Added deleteReminder method
+       - Delegates to reminderStore.deleteReminder(withId:)
+   - **Accessibility**:
+     - VoiceOver reads "Delete" action when swiping
+     - Delete button has proper accessibility label
+     - Full swipe works with VoiceOver rotor actions
+     - Supports standard iOS gesture controls
+   - **Design Decisions**:
+     - Used trailing edge (right side) following iOS conventions
+     - Single delete action (no edit/share/other actions)
+     - Full swipe enabled for power users
+     - Destructive role for red color and warning
+     - Trash icon universally understood
+     - Maintains existing tile design (no visual changes at rest)
+   - **User Feedback**:
+     - Immediate visual removal from list
+     - System haptic feedback on swipe and delete
+     - Smooth slide-out animation
+     - No confirmation dialog (standard for swipe-to-delete)
+     - Can be undone via CloudKit sync if needed
+   - **Files Modified**:
+     - `DaysToGo/ReminderListView.swift` (swipe gesture implementation)
+     - `DaysToGo/ViewModels/ReminderListViewModel.swift` (delete method)
+     - `01_CURRENT_STATE.md` (features and recent changes)

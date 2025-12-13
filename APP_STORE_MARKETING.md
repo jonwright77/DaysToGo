@@ -43,6 +43,7 @@ Each reminder reveals four types of personal context:
 
 ✓ **Beautiful Reminders** - Customize with 12 pastel colors and optional descriptions
 ✓ **Smart Organization** - Separate views for upcoming reminders and past events
+✓ **Swipe to Delete** - Quick removal with familiar iOS gesture
 ✓ **Privacy First** - All data stored locally and synced via your private iCloud account
 ✓ **Home Screen Widget** - See your next reminder at a glance
 ✓ **Automatic Sync** - Seamlessly synced across all your devices
@@ -130,6 +131,7 @@ Transform how you experience time by reflecting on your past as you count down t
 
 Features in this release:
 • Create customizable reminders with 12 beautiful pastel colors
+• Swipe left to delete reminders with familiar iOS gesture
 • View photos from your library on reflection dates
 • See calendar events from corresponding past dates
 • Explore location history with interactive maps

@@ -2,7 +2,7 @@
 
 ## ✅ Completed Tasks
 
-All four preparation tasks have been completed successfully:
+All preparation tasks have been completed successfully, plus additional feature enhancements:
 
 ### 1. ✅ Privacy Policy Created
 - **File:** `PRIVACY_POLICY.md`
@@ -36,6 +36,14 @@ All four preparation tasks have been completed successfully:
   - App review notes
   - Screenshot suggestions
   - Age rating answers
+
+### 5. ✅ Swipe-to-Delete Functionality Added
+- Implemented standard iOS swipe gesture for quick deletion
+- Swipe left to reveal delete button
+- Full swipe for instant removal
+- Works in both Reminders and History views
+- Maintains existing visual design
+- Added deleteReminder method to ViewModel
 
 ---
 
@@ -74,6 +82,17 @@ All four preparation tasks have been completed successfully:
 **File:** `DaysToGo/ProfileSettingsView.swift`
 - Updated all onChange modifiers to iOS 17+ syntax
 - Removed deprecated closure parameter
+
+### Swipe-to-Delete Implementation
+**File:** `DaysToGo/ReminderListView.swift`
+- Replaced ScrollView + LazyVStack with List
+- Added swipeActions modifier with delete button
+- Configured list styling to maintain visual design
+- Hidden separators and custom row insets
+
+**File:** `DaysToGo/ViewModels/ReminderListViewModel.swift`
+- Added deleteReminder(_ reminder: Reminder) method
+- Calls reminderStore.deleteReminder(withId:)
 
 ---
 

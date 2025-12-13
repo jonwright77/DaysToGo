@@ -49,21 +49,28 @@ struct ReminderListView: View {
                         }
                         Spacer()
                     } else {
-                        ScrollView {
-                            LazyVStack(spacing: 16) {
-                                ForEach(viewModel.displayedReminders) { reminder in
-                                    NavigationLink(destination: ReminderDetailView(reminder: reminder, store: reminderStore)) {
-                                        ReminderTile(reminder: reminder)
-                                            .scaleEffect(didAnimate ? 1.0 : 0.95)
-                                            .opacity(didAnimate ? 1.0 : 0)
-                                            .animation(.easeOut(duration: 0.4), value: didAnimate)
+                        List {
+                            ForEach(viewModel.displayedReminders) { reminder in
+                                NavigationLink(destination: ReminderDetailView(reminder: reminder, store: reminderStore)) {
+                                    ReminderTile(reminder: reminder)
+                                        .scaleEffect(didAnimate ? 1.0 : 0.95)
+                                        .opacity(didAnimate ? 1.0 : 0)
+                                        .animation(.easeOut(duration: 0.4), value: didAnimate)
+                                }
+                                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.clear)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        viewModel.deleteReminder(reminder)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
                                     }
-                                    .buttonStyle(PlainButtonStyle())
                                 }
                             }
-                            .padding()
-                            .id(viewModel.lastRefreshDate)
                         }
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
                         .refreshable {
                             await viewModel.refresh()
                         }
