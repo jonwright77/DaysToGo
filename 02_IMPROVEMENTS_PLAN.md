@@ -1252,3 +1252,70 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/ReminderListView.swift` (swipe gesture implementation)
      - `DaysToGo/ViewModels/ReminderListViewModel.swift` (delete method)
      - `01_CURRENT_STATE.md` (features and recent changes)
+
+12. **"Today" Display for Zero Days Remaining**
+   - **Status**: ✅ Completed
+   - **Priority**: Low
+   - **Rationale**: Displaying "0 days left" for events happening today is technically correct but not natural language. Users expect to see "Today" rather than a numerical zero, which provides clearer communication and better user experience.
+   - **Summary**: Changed the display for reminders with 0 days remaining to show "Today" instead of "0 days left" in both reminder tiles and the home screen widget. This provides more natural, intuitive communication about current-day events.
+   - **Implementation Changes**:
+     - **ReminderTile.swift** (lines 41-44):
+       - Added conditional check: `reminder.daysRemaining == 0 ? "Today" : ...`
+       - Displays "Today" when daysRemaining is 0
+       - Maintains existing format for all other values
+     - **ReminderTile.swift** (line 56):
+       - Updated accessibility label to match visual display
+       - VoiceOver announces "Today" instead of "0 days left"
+     - **DaysToGoWidget.swift** (lines 78-86):
+       - Added conditional if/else block for display
+       - Shows "Today" at 40pt font when daysRemaining is 0
+       - Shows number at 80pt font for all other values
+       - Smaller font for "Today" ensures proper fit in widget
+   - **Display Logic**:
+     - **Positive numbers**: "5 days left", "1 day left" (singular/plural handled)
+     - **Zero**: **"Today"** (new behavior)
+     - **Negative numbers**: "-3 days left" (overdue reminders in History view)
+   - **Widget Font Sizing**:
+     - Numbers (1-999+): 80pt bold font (large, clear)
+     - "Today" text: 40pt bold font (appropriately sized for word length)
+     - Maintains visual hierarchy and readability
+   - **User Experience Benefits**:
+     - **More natural**: "Today" is how people speak
+     - **Clearer**: Immediately indicates current-day event
+     - **Less technical**: Avoids numerical "0" representation
+     - **Consistent**: Matches common calendar app patterns
+     - **Professional**: Polished, thoughtful UI details
+   - **Examples**:
+     - Wedding in 30 days: "30 days left"
+     - Birthday tomorrow: "1 day left"
+     - Anniversary today: **"Today"** ✨
+     - Past event (History): "-5 days left"
+   - **Accessibility**:
+     - VoiceOver reads "Today" for zero-day reminders
+     - Screen readers announce natural language
+     - Maintains accessibility for all other states
+     - No change to existing accessibility features
+   - **Visual Consistency**:
+     - Reminder tiles and widget both updated
+     - Consistent behavior across all app surfaces
+     - Maintains existing color/border/styling
+     - No layout shifts or visual changes beyond text
+   - **Edge Cases Handled**:
+     - Only affects exactly 0 days remaining
+     - Negative values (overdue) unchanged
+     - Positive values (future) unchanged
+     - Widget empty state unchanged
+   - **Design Philosophy**:
+     - Speak the user's language
+     - Use natural, conversational text
+     - Reduce cognitive load with familiar terms
+     - Polish small details for better UX
+   - **Technical Notes**:
+     - Simple ternary operator implementation
+     - No performance impact
+     - No additional state management needed
+     - Backward compatible (no data changes)
+   - **Files Modified**:
+     - `DaysToGo/ReminderTile.swift` (display text and accessibility)
+     - `DaysToGoWidget/DaysToGoWidget.swift` (widget display logic)
+     - `01_CURRENT_STATE.md` (recent changes)

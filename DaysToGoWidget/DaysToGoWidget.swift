@@ -75,9 +75,15 @@ struct DaysToGoWidgetEntryView : View {
 
                 Spacer()
 
-                Text("\(reminder.daysRemaining)")
-                    .font(.system(size: 80, weight: .bold))
-                    .foregroundColor(.black)
+                if reminder.daysRemaining == 0 {
+                    Text("Today")
+                        .font(.system(size: 40, weight: .bold))
+                        .foregroundColor(.black)
+                } else {
+                    Text("\(reminder.daysRemaining)")
+                        .font(.system(size: 80, weight: .bold))
+                        .foregroundColor(.black)
+                }
 
                 Spacer()
             } else {

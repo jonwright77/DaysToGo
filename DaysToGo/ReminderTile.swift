@@ -38,7 +38,7 @@ struct ReminderTile: View {
                 .font(.headline)
                 .foregroundColor(.black)
 
-            Text("\(reminder.daysRemaining) day\(reminder.daysRemaining == 1 ? "" : "s") left")
+            Text(reminder.daysRemaining == 0 ? "Today" : "\(reminder.daysRemaining) day\(reminder.daysRemaining == 1 ? "" : "s") left")
                 .font(.title2)
                 .bold()
                 .foregroundColor(.black)
@@ -53,6 +53,6 @@ struct ReminderTile: View {
         .cornerRadius(12)
         .shadow(radius: 2)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(reminder.title), \(reminder.date.formatted(date: .long, time: .omitted)), \(reminder.daysRemaining) days left")
+        .accessibilityLabel("\(reminder.title), \(reminder.date.formatted(date: .long, time: .omitted)), \(reminder.daysRemaining == 0 ? "Today" : "\(reminder.daysRemaining) days left")")
     }
 }

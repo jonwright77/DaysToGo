@@ -198,3 +198,12 @@
 - Works in both Reminders and History views
 - Uses native iOS List with swipeActions for familiar UX
 - Maintains visual design with custom row insets and hidden separators
+
+### December 2025 - "Today" Display Enhancement
+
+**Improved Date Presentation**
+- Reminders with 0 days remaining now display "Today" instead of "0 days left"
+- Applied to both reminder tiles and home screen widget
+- Widget uses appropriately sized font (40pt) for "Today" text
+- Provides clearer, more natural indication of current-day events
+- Updated accessibility labels to announce "Today" for VoiceOver users
