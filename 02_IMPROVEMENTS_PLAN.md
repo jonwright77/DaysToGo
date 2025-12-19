@@ -1409,3 +1409,103 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/ReminderTile.swift` (date format in list view)
      - `DaysToGo/ReminderDetailView.swift` (date formats and layout change)
      - `01_CURRENT_STATE.md` (recent changes)
+
+14. **History View Border Removal**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: Colored urgency borders (red for overdue, yellow for today, green for within 7 days) are designed to highlight upcoming reminders that need attention. For past events in the History view, urgency is no longer relevant. The colored borders created visual noise and distracted from the content. Removing them provides a cleaner, more focused view of historical reminders.
+   - **Summary**: Removed colored urgency borders from reminder tiles when displayed in the History view. Tiles now show only their pastel background colors. The Reminders view maintains urgency borders for upcoming events where they provide actionable value.
+   - **Implementation Details**:
+     - **ReminderTile Component** (`ReminderTile.swift`):
+       - Added `showUrgencyBorder: Bool` parameter (defaults to `true`)
+       - Updated `borderColor` computed property with guard clause
+       - Returns `.clear` when `showUrgencyBorder` is `false`
+       - Maintains existing urgency logic when enabled
+     - **ReminderListView Updates** (`ReminderListView.swift`):
+       - Pass `showUrgencyBorder: viewModel.selectedView == .reminders` to each tile
+       - Automatically shows borders for Reminders view, hides for History view
+       - Single source of truth based on selected view mode
+   - **Border Behavior**:
+     - **Reminders View** (`showUrgencyBorder: true`):
+       - Red border: Overdue (daysRemaining < 0) - shouldn't occur in this view
+       - Yellow border: Today (daysRemaining = 0)
+       - Green border: Within 7 days (1-7 days remaining)
+       - No border: More than 7 days away
+     - **History View** (`showUrgencyBorder: false`):
+       - No borders on any tiles regardless of date
+       - Clean pastel backgrounds only
+       - Focus on content, not urgency
+   - **User Experience Impact**:
+     - **Before**: History tiles had red borders (all were "overdue"), creating visual clutter
+     - **After**: Clean pastel tiles in History, urgency borders only in Reminders
+     - Clearer visual separation between active (Reminders) and archival (History) contexts
+     - Less visually busy, more focused on content
+     - Urgency indicators only appear where they're actionable
+   - **Design Philosophy**:
+     - Urgency is context-dependent
+     - Past events can't be "overdue" - they've already happened
+     - Visual elements should serve a purpose, not just be consistent
+     - Different views can have different visual treatments when it serves UX
+   - **Technical Benefits**:
+     - Clean component API with optional parameter
+     - Backward compatible (defaults to showing borders)
+     - No conditional logic in view rendering
+     - Reusable component adapts to context
+   - **Files Modified**:
+     - `DaysToGo/ReminderTile.swift` (added showUrgencyBorder parameter)
+     - `DaysToGo/ReminderListView.swift` (pass parameter based on view mode)
+     - `01_CURRENT_STATE.md` (recent changes documentation)
+
+15. **History Detail Empty State Date Fix**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: After implementing smart date selection for History view data fetching (enhancement #6), a bug was discovered in the empty state placeholders. While data was correctly fetched using the reminder date for past events, the empty state messages still referenced the reflection date, creating confusion. For example, a past event on "November 20, 2024" would correctly show data from that date, but if no data existed, it would say "No Photos on December 26, 2024" (a future reflection date), which made no sense.
+   - **Summary**: Fixed all empty state placeholders in the reminder detail view to use the correct date based on whether the reminder is past or future. Empty states now use `dateForDataFetching` from the ViewModel, ensuring consistency between the data being fetched and the messages displayed when no data is found.
+   - **Implementation Details**:
+     - **Empty State Updates** (`ReminderDetailView.swift`):
+       - Changed from `viewModel.reminder.reflectionDate` to `viewModel.dateForDataFetching`
+       - Applied to all four data section empty states:
+         - Photos section (line 89)
+         - Calendar Events section (line 129)
+         - Historical Events section (line 195)
+         - Location section (line 230)
+     - **ViewModel Property Used** (`ReminderDetailViewModel.swift`):
+       - `dateForDataFetching` computed property returns appropriate date
+       - Past reminders (daysRemaining < 0): Returns `reminder.date`
+       - Future/today reminders (daysRemaining >= 0): Returns `reminder.reflectionDate`
+       - Single source of truth for date selection logic
+   - **Empty State Messages Updated**:
+     - **Photos**: "No Photos on \(fetchDate)" instead of "No Photos on \(reflectionDate)"
+     - **Calendar Events**: "No Calendar Events for \(fetchDate)" instead of "No Calendar Events for \(reflectionDate)"
+     - **Historical Events**: "No Historical Events for \(fetchDate)" instead of "No Historical Events for \(reflectionDate)"
+     - **Location**: "No Location Data for \(fetchDate)" instead of "No Location Data for \(reflectionDate)"
+   - **Bug Example**:
+     - **Before**: Past reminder on Nov 20, 2024 → Empty state says "No Photos on Dec 26, 2024" (confusing future date)
+     - **After**: Past reminder on Nov 20, 2024 → Empty state says "No Photos on November 20, 2024" (correct)
+   - **User Experience Impact**:
+     - **Consistency**: Empty state messages match the date being queried
+     - **Clarity**: Users understand what date the app looked for data
+     - **No Confusion**: No misleading future dates shown for past reminders
+     - **Trust**: App behavior is predictable and logical
+   - **Technical Consistency**:
+     - All four data types use same date selection logic
+     - Empty states and data fetching always aligned
+     - Single computed property eliminates duplication
+     - Follows DRY principle (Don't Repeat Yourself)
+   - **Example Scenarios**:
+     - **Past Event** (History view - Birthday on Nov 20, 2024):
+       - Data fetch: Uses Nov 20, 2024 ✓
+       - Empty state: References Nov 20, 2024 ✓
+       - Message: "No Photos on November 20, 2024"
+     - **Future Event** (Reminders view - Wedding in 30 days):
+       - Data fetch: Uses reflection date (30 days ago) ✓
+       - Empty state: References reflection date ✓
+       - Message: "No Photos on October 27, 2024"
+   - **Design Benefits**:
+     - Messages accurately describe what the app did
+     - No cognitive dissonance between query and message
+     - Proper separation of concerns (ViewModel handles logic)
+     - View simply displays what ViewModel provides
+   - **Files Modified**:
+     - `DaysToGo/ReminderDetailView.swift` (all four empty state sections)
+     - `01_CURRENT_STATE.md` (recent changes documentation)

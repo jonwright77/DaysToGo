@@ -217,3 +217,23 @@
 - Detail view changed from horizontal to vertical layout for better readability
 - Provides better planning context (weekend vs weekday identification)
 - Format: weekday (full), day, month (full), year
+
+### December 2025 - History View Border Removal
+
+**Cleaner History Display**
+- Removed colored urgency borders from reminder tiles in History view
+- History reminders now display with only their pastel background colors
+- Reminders view maintains colored borders (red/yellow/green) for urgency indicators
+- Added `showUrgencyBorder` parameter to `ReminderTile` component
+- Provides cleaner, less visually busy appearance for past events
+- Urgency borders are only relevant for upcoming reminders, not historical ones
+
+### December 2025 - History Detail Empty State Fix
+
+**Correct Date Display in Empty States**
+- Fixed empty state placeholders in History detail view to show correct date
+- Previously showed reflection date (future) instead of actual reminder date (past)
+- Updated all four empty state sections: Photos, Calendar Events, Historical Events, Location
+- Now uses `dateForDataFetching` computed property from ViewModel
+- Empty states for past reminders now correctly reference the actual event date
+- Provides consistency with the data being fetched and displayed

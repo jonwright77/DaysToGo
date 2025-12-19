@@ -86,12 +86,12 @@ struct ReminderDetailView: View {
                             }
                         }
                         .padding(.top)
-                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                    } else if let fetchDate = viewModel.dateForDataFetching {
                         VStack {
                             Image(systemName: "photo.on.rectangle.angled")
                                 .font(.largeTitle)
                                 .foregroundColor(.secondary)
-                            Text("No Photos on \(reflectionDate.formatted(date: .long, time: .omitted))")
+                            Text("No Photos on \(fetchDate.formatted(date: .long, time: .omitted))")
                                 .foregroundColor(.secondary)
                         }
                         .padding()
@@ -126,12 +126,12 @@ struct ReminderDetailView: View {
                             }
                         }
                         .padding(.horizontal)
-                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                    } else if let fetchDate = viewModel.dateForDataFetching {
                         VStack {
                             Image(systemName: "calendar.badge.exclamationmark")
                                 .font(.largeTitle)
                                 .foregroundColor(.secondary)
-                            Text("No Calendar Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                            Text("No Calendar Events for \(fetchDate.formatted(date: .long, time: .omitted))")
                                 .foregroundColor(.secondary)
                         }
                         .padding()
@@ -192,12 +192,12 @@ struct ReminderDetailView: View {
                             }
                         }
                         .padding(.horizontal)
-                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                    } else if let fetchDate = viewModel.dateForDataFetching {
                         VStack {
                             Image(systemName: "calendar.badge.clock")
                                 .font(.largeTitle)
                                 .foregroundColor(.secondary)
-                            Text("No Historical Events for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                            Text("No Historical Events for \(fetchDate.formatted(date: .long, time: .omitted))")
                                 .foregroundColor(.secondary)
                         }
                         .padding()
@@ -227,12 +227,12 @@ struct ReminderDetailView: View {
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal)
                         }
-                    } else if let reflectionDate = viewModel.reminder.reflectionDate {
+                    } else if let fetchDate = viewModel.dateForDataFetching {
                         VStack {
                             Image(systemName: "map")
                                 .font(.largeTitle)
                                 .foregroundColor(.secondary)
-                            Text("No Location Data for \(reflectionDate.formatted(date: .long, time: .omitted))")
+                            Text("No Location Data for \(fetchDate.formatted(date: .long, time: .omitted))")
                                 .foregroundColor(.secondary)
                             Text("Location tracking builds history over time")
                                 .font(.caption)

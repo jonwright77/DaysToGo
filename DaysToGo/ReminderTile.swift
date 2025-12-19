@@ -12,8 +12,13 @@ import DaysToGoKit
 
 struct ReminderTile: View {
     let reminder: Reminder
+    var showUrgencyBorder: Bool = true
 
     var borderColor: Color {
+        guard showUrgencyBorder else {
+            return .clear
+        }
+
         switch reminder.daysRemaining {
         case ..<0:
             return .red

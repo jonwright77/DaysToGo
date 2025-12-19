@@ -52,7 +52,7 @@ struct ReminderListView: View {
                         List {
                             ForEach(viewModel.displayedReminders) { reminder in
                                 NavigationLink(destination: ReminderDetailView(reminder: reminder, store: reminderStore)) {
-                                    ReminderTile(reminder: reminder)
+                                    ReminderTile(reminder: reminder, showUrgencyBorder: viewModel.selectedView == .reminders)
                                         .scaleEffect(didAnimate ? 1.0 : 0.95)
                                         .opacity(didAnimate ? 1.0 : 0)
                                         .animation(.easeOut(duration: 0.4), value: didAnimate)
