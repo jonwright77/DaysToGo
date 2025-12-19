@@ -237,3 +237,14 @@
 - Now uses `dateForDataFetching` computed property from ViewModel
 - Empty states for past reminders now correctly reference the actual event date
 - Provides consistency with the data being fetched and displayed
+
+### December 2025 - Reminder Form Reorganization
+
+**Cleaner Form Layout with Defined Sections**
+- Reorganized reminder form into four clearly defined sections
+- Separated Title, Date, Details, and Colour into individual sections
+- Each field now has its own dedicated section with clear header
+- Updated placeholders: "Enter reminder title" and "Select date" for better clarity
+- Applies to both Add Reminder and Edit Reminder views via shared ReminderFormView
+- Improved visual hierarchy and easier scanning of form structure
+- More consistent with iOS form design patterns

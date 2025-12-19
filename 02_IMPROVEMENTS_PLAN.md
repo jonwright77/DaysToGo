@@ -1509,3 +1509,69 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
    - **Files Modified**:
      - `DaysToGo/ReminderDetailView.swift` (all four empty state sections)
      - `01_CURRENT_STATE.md` (recent changes documentation)
+
+16. **Reminder Form Reorganization**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: The original form layout grouped Title and Date together in one section, and Description and Color together in another. This created visual ambiguity about which fields were related and made the form feel cramped. Users benefit from clear visual separation that helps them understand each field's purpose at a glance. Separating each field into its own section provides better visual hierarchy and follows iOS form design conventions.
+   - **Summary**: Reorganized the reminder form into four distinct sections (Title, Date, Details, Colour), giving each field its own dedicated space with a clear header. Updated placeholders to be more descriptive. The changes apply to both Add and Edit reminder views through the shared ReminderFormView component.
+   - **Implementation Details**:
+     - **Form Structure** (`ReminderFormView.swift`):
+       - **Before**: 2 sections ("Reminder" with title+date, "Details" with description+color)
+       - **After**: 4 sections (Title, Date, Details, Colour - each separate)
+     - **Section 1 - Title**:
+       - Header: "Title"
+       - Field: TextField with placeholder "Enter reminder title"
+       - Single focused purpose: name the reminder
+     - **Section 2 - Date**:
+       - Header: "Date"
+       - Field: DatePicker with label "Select date"
+       - Single focused purpose: choose when
+     - **Section 3 - Details**:
+       - Header: "Details"
+       - Field: TextEditor (100pt height)
+       - Single focused purpose: add description
+     - **Section 4 - Colour**:
+       - Header: "Colour"
+       - Field: ColorPickerView (2×6 grid of 12 pastel colors)
+       - Single focused purpose: visual customization
+   - **Visual Changes**:
+     - **Before**: Two dense sections with mixed field types
+     - **After**: Four clean sections with clear headers
+     - More whitespace between logical groups
+     - Easier to scan and understand form structure
+     - Each section visually distinct with iOS standard section styling
+   - **User Experience Benefits**:
+     - **Clarity**: Each field's purpose is immediately clear
+     - **Focus**: Users can concentrate on one task at a time
+     - **Scanning**: Easier to find specific fields when editing
+     - **Cognitive Load**: Less mental effort to understand form structure
+     - **Professional**: Follows iOS Human Interface Guidelines
+   - **Placeholder Improvements**:
+     - **Title**: Changed to "Enter reminder title" (more instructive)
+     - **Date**: Changed to "Select date" (clearer action)
+     - Previous placeholders were generic ("Title", "Date")
+     - New placeholders guide user action
+   - **Design Philosophy**:
+     - One section, one purpose (Single Responsibility Principle)
+     - Visual hierarchy reflects information hierarchy
+     - Consistent with system forms (Settings, Contacts, etc.)
+     - Whitespace improves readability
+     - Clear headers reduce need for labels within fields
+   - **Technical Benefits**:
+     - Clean, maintainable form structure
+     - Easy to add new sections in the future
+     - Consistent between Add and Edit views
+     - Reusable component with clear organization
+   - **Applies To**:
+     - AddReminderView (uses ReminderFormView)
+     - EditReminderView (uses ReminderFormView)
+     - Both views benefit from single source of truth
+   - **Accessibility**:
+     - VoiceOver announces section headers
+     - Clear navigation between form sections
+     - Logical focus order (Title → Date → Details → Colour)
+     - Section headers provide context for screen readers
+   - **Files Modified**:
+     - `DaysToGo/ReminderFormView.swift` (reorganized into 4 sections)
+     - `01_CURRENT_STATE.md` (recent changes documentation)

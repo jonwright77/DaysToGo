@@ -21,15 +21,20 @@ struct ReminderFormView: View {
 
     var body: some View {
         Form {
-            Section(header: Text("Reminder")) {
-                TextField("Title", text: $title)
-                DatePicker("Date", selection: $date, displayedComponents: .date)
+            Section(header: Text("Title")) {
+                TextField("Enter reminder title", text: $title)
+            }
+
+            Section(header: Text("Date")) {
+                DatePicker("Select date", selection: $date, displayedComponents: .date)
             }
 
             Section(header: Text("Details")) {
                 TextEditor(text: $description)
                     .frame(height: 100)
+            }
 
+            Section(header: Text("Colour")) {
                 ColorPickerView(selectedColor: $selectedColor)
             }
         }
