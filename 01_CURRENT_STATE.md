@@ -248,3 +248,14 @@
 - Applies to both Add Reminder and Edit Reminder views via shared ReminderFormView
 - Improved visual hierarchy and easier scanning of form structure
 - More consistent with iOS form design patterns
+
+### December 2025 - Positive "Days Ago" for History
+
+**Natural Language for Past Reminders**
+- Changed display for past reminders from negative "days left" to positive "days ago"
+- History tiles now show "5 days ago" instead of "-5 days left"
+- Detail view for past reminders now includes "X days ago" display
+- Added `daysText` computed property to ReminderTile for clean formatting logic
+- More natural language: past events described as "ago", future events as "left"
+- Applied to both reminder tiles and detail view
+- Updated accessibility labels to announce correct phrasing

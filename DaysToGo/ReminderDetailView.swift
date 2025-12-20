@@ -32,6 +32,10 @@ struct ReminderDetailView: View {
                     VStack(spacing: 8) {
                         Text(viewModel.reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
                             .font(.headline)
+                        let daysAgo = abs(viewModel.reminder.daysRemaining)
+                        Text("\(daysAgo) day\(daysAgo == 1 ? "" : "s") ago")
+                            .font(.title2)
+                            .fontWeight(.medium)
                         Text("Showing data from this day")
                             .font(.caption)
                             .foregroundColor(.secondary)

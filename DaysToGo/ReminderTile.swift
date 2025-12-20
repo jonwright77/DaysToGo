@@ -31,6 +31,17 @@ struct ReminderTile: View {
         }
     }
 
+    var daysText: String {
+        if reminder.daysRemaining == 0 {
+            return "Today"
+        } else if reminder.daysRemaining < 0 {
+            let daysAgo = abs(reminder.daysRemaining)
+            return "\(daysAgo) day\(daysAgo == 1 ? "" : "s") ago"
+        } else {
+            return "\(reminder.daysRemaining) day\(reminder.daysRemaining == 1 ? "" : "s") left"
+        }
+    }
+
     var body: some View {
         VStack(spacing: 8) {
             Text(reminder.title)
@@ -43,7 +54,7 @@ struct ReminderTile: View {
                 .font(.headline)
                 .foregroundColor(.black)
 
-            Text(reminder.daysRemaining == 0 ? "Today" : "\(reminder.daysRemaining) day\(reminder.daysRemaining == 1 ? "" : "s") left")
+            Text(daysText)
                 .font(.title2)
                 .bold()
                 .foregroundColor(.black)
@@ -58,6 +69,6 @@ struct ReminderTile: View {
         .cornerRadius(12)
         .shadow(radius: 2)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(reminder.title), \(reminder.date.formatted(date: .long, time: .omitted)), \(reminder.daysRemaining == 0 ? "Today" : "\(reminder.daysRemaining) days left")")
+        .accessibilityLabel("\(reminder.title), \(reminder.date.formatted(date: .long, time: .omitted)), \(daysText)")
     }
 }

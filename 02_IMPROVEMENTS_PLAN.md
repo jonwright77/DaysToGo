@@ -1575,3 +1575,77 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
    - **Files Modified**:
      - `DaysToGo/ReminderFormView.swift` (reorganized into 4 sections)
      - `01_CURRENT_STATE.md` (recent changes documentation)
+
+17. **Positive "Days Ago" for History Reminders**
+   - **Status**: ✅ Completed
+   - **Priority**: Medium
+   - **Rationale**: Past reminders in the History view were displaying negative values (e.g., "-5 days left"), which is technically accurate but unnatural language. People don't refer to past events as having negative days remaining - they say the event was "X days ago". This creates cognitive dissonance and requires mental translation from negative to positive. Using natural, conversational language improves comprehension and feels more intuitive.
+   - **Summary**: Changed the display of past reminders to show positive "days ago" instead of negative "days left". For example, a reminder from 5 days ago now displays "5 days ago" instead of "-5 days left". Applied to both reminder tiles in the History list and the detail view.
+   - **Implementation Details**:
+     - **ReminderTile Component** (`ReminderTile.swift`):
+       - Added `daysText` computed property to centralize formatting logic
+       - Handles three cases:
+         - `daysRemaining == 0`: Returns "Today"
+         - `daysRemaining < 0`: Returns "\(abs(daysRemaining)) day(s) ago"
+         - `daysRemaining > 0`: Returns "\(daysRemaining) day(s) left"
+       - Uses `abs()` to convert negative values to positive
+       - Proper singular/plural handling ("1 day ago" vs "5 days ago")
+       - Updated display text to use `daysText` property
+       - Updated accessibility label to use `daysText` for VoiceOver
+     - **ReminderDetailView Updates** (`ReminderDetailView.swift`):
+       - Added "days ago" display for past reminders
+       - Shows between the date and "Showing data from this day" caption
+       - Calculates `let daysAgo = abs(viewModel.reminder.daysRemaining)`
+       - Displays with title2 font and medium weight for consistency
+       - Matches the visual hierarchy of future reminder days display
+   - **Display Format Changes**:
+     - **History Tile**:
+       - Before: "Birthday" / "November 20, 2024" / "-5 days left"
+       - After: "Birthday" / "November 20, 2024" / "5 days ago"
+     - **History Detail**:
+       - Before: "November 20, 2024" / "Showing data from this day"
+       - After: "November 20, 2024" / "5 days ago" / "Showing data from this day"
+     - **Reminders** (unchanged):
+       - Still shows "5 days left" for future events
+       - Still shows "Today" for current day
+   - **User Experience Benefits**:
+     - **Natural Language**: Uses conversational phrasing people actually use
+     - **Clarity**: No mental conversion from negative to positive needed
+     - **Consistency**: Past = "ago", Future = "left", Today = "Today"
+     - **Professional**: Matches how calendar apps and date displays work
+     - **Reduced Cognitive Load**: Immediate understanding without translation
+   - **Examples**:
+     - **1 day ago**: "1 day ago" (singular, grammatically correct)
+     - **5 days ago**: "5 days ago" (plural)
+     - **30 days ago**: "30 days ago"
+     - **Today**: "Today" (special case, unchanged)
+     - **5 days left**: "5 days left" (future, unchanged)
+   - **Accessibility**:
+     - VoiceOver announces "5 days ago" instead of "negative 5 days left"
+     - Screen readers use natural, conversational language
+     - Easier to understand for all users
+     - No mathematical terminology for past events
+   - **Code Quality**:
+     - Single computed property eliminates duplication
+     - Clean, readable logic with clear conditionals
+     - Proper use of abs() for mathematical transformation
+     - Consistent singular/plural handling across all cases
+   - **Design Philosophy**:
+     - Speak the user's language, not computer language
+     - Past and future are conceptually different, should use different terminology
+     - Negative numbers are implementation details, not user-facing concepts
+     - Natural language reduces friction and improves comprehension
+   - **Technical Notes**:
+     - `abs()` function converts negative values to positive
+     - Singular/plural logic: `daysAgo == 1 ? "" : "s"`
+     - Same formatting pattern used for both past and future cases
+     - Computed property calculated on-demand, no caching needed
+   - **Applies To**:
+     - History view reminder tiles (list display)
+     - History view reminder detail (detail display)
+     - Reminders view unchanged (still uses "days left")
+     - Widget display could be updated in future if needed
+   - **Files Modified**:
+     - `DaysToGo/ReminderTile.swift` (added daysText computed property)
+     - `DaysToGo/ReminderDetailView.swift` (added days ago display)
+     - `01_CURRENT_STATE.md` (recent changes documentation)
