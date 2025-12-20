@@ -1649,3 +1649,120 @@ These enhancements refine the Wikipedia "On This Day" feature to provide more re
      - `DaysToGo/ReminderTile.swift` (added daysText computed property)
      - `DaysToGo/ReminderDetailView.swift` (added days ago display)
      - `01_CURRENT_STATE.md` (recent changes documentation)
+
+18. **Reminder Detail View Reorganization**
+   - **Status**: ✅ Completed
+   - **Priority**: High
+   - **Rationale**: The original detail view for future reminders mixed reminder information (title, date, days) with reflective data (photos, calendar, historical events) without clear separation. Users opening a reminder detail needed to understand two distinct concepts: (1) the upcoming reminder itself, and (2) what happened on the reflection date. Mixing these created cognitive overhead. Separating them into clearly labeled sections improves comprehension and creates a logical information flow.
+   - **Summary**: Reorganized the reminder detail view for future/today reminders into two distinct sections. The top section shows all reminder information (title, date, days to go, details). The second section has a "What happened on" heading followed by the reflection date, then all reflective data (photos, calendar, historical events, location). History view layout remains unchanged.
+   - **Implementation Details**:
+     - **Future/Today Reminders Layout** (`ReminderDetailView.swift` - lines 56-95):
+       - **Section 1 - Reminder Information**:
+         - Title (title font, bold)
+         - Reminder Date (headline font, with day of week)
+         - Days to go ("5 days left" or "Today", title2 font, medium weight)
+         - Details (if present, with "Details" header, left-aligned)
+       - **Divider**
+       - **Section 2 - Reflective Data**:
+         - Section heading: "What happened on" (title2 font, semibold)
+         - Reflection date (headline font, secondary color, with day of week)
+         - Photos section (if enabled)
+         - Calendar Events section (if enabled)
+         - Historical Events section (if enabled)
+         - Location Map section (if enabled)
+     - **History Reminders Layout** (unchanged - lines 26-55):
+       - Title
+       - Reminder Date
+       - Days ago
+       - "Showing data from this day" caption
+       - Description (if present)
+       - Data sections show actual event day data
+   - **Visual Structure Comparison**:
+     - **Before (Future Reminder)**:
+       ```
+       Title
+       Reflection Date ↔ 30 Days ↔ Reminder Date
+       ─────
+       Description
+       ─────
+       Photos
+       Calendar
+       History
+       Location
+       ```
+     - **After (Future Reminder)**:
+       ```
+       Title
+       Reminder Date
+       30 days left
+       Details: [description]
+       ─────
+       What happened on
+       Reflection Date
+       ─────
+       Photos
+       Calendar
+       History
+       Location
+       ```
+   - **User Experience Benefits**:
+     - **Clear Separation**: Reminder info and reflective data are visually distinct
+     - **Logical Flow**: Top-down reading: what's coming → what happened before
+     - **Context Setting**: "What happened on" heading explains why you're seeing historical data
+     - **Reduced Confusion**: Users immediately understand what they're looking at
+     - **Better Comprehension**: Two-section structure matches mental model of the app
+   - **Information Architecture**:
+     - **Primary Information** (What you need to know):
+       - What is the reminder?
+       - When is it?
+       - How long until it happens?
+       - Any details/notes?
+     - **Secondary Information** (Context for reflection):
+       - What happened on the corresponding past date?
+       - Visual/contextual data to aid reflection
+   - **Section Heading Choice**:
+     - "What happened on" instead of "What you were doing on"
+     - Broader, more inclusive phrasing
+     - Covers photos (what you were doing), calendar (events), history (world events), location (where you were)
+     - More accurate description of the mixed data types
+   - **Design Decisions**:
+     - History view unchanged - already optimal for past events
+     - Future reminders get reorganization - needed clearer structure
+     - "Details" header instead of "Description" - more concise
+     - Reflection date in secondary color - visual hierarchy
+     - Section heading uses title2 font - prominent but not dominant
+     - Top section items centered, details section left-aligned
+   - **Spacing & Visual Hierarchy**:
+     - 24pt spacing between major sections (VStack default)
+     - 8pt spacing within sections
+     - Divider separates reminder info from reflective data
+     - Padding adjustments ensure clean visual flow
+     - Section heading gets top padding for breathing room
+   - **Consistency Considerations**:
+     - History view maintains existing layout for consistency
+     - Only future/today reminders get new layout
+     - Data sections (photos, calendar, etc.) unchanged
+     - Edit/Delete buttons remain at bottom
+   - **Technical Implementation**:
+     - Separate if/else branches for past vs future reminders
+     - Clear comments distinguish "HISTORY VIEW" and "REMINDERS VIEW"
+     - Removed previous reflection date/days/reminder date VStack
+     - Simplified structure with direct Text views
+     - Maintained all existing data loading and display logic
+   - **Example Use Case**:
+     - User opens "Wedding" reminder (30 days away)
+     - Immediately sees: Wedding / Dec 13, 2025 / 30 days left / Details
+     - Understands this is the reminder information
+     - Scrolls down to "What happened on"
+     - Sees: Nov 13, 2025
+     - Understands the following data is from that reflection date
+     - Views photos, calendar, history from 30 days ago
+     - Context is clear throughout the experience
+   - **Accessibility**:
+     - Logical reading order: Reminder info → Reflective data
+     - Section heading provides context for screen readers
+     - VoiceOver announces all elements in proper sequence
+     - No changes to existing accessibility labels
+   - **Files Modified**:
+     - `DaysToGo/ReminderDetailView.swift` (reorganized future reminder layout)
+     - `01_CURRENT_STATE.md` (recent changes documentation)

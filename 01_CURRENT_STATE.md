@@ -259,3 +259,14 @@
 - More natural language: past events described as "ago", future events as "left"
 - Applied to both reminder tiles and detail view
 - Updated accessibility labels to announce correct phrasing
+
+### December 2025 - Reminder Detail View Reorganization
+
+**Clearer Information Hierarchy for Future Reminders**
+- Reorganized detail view for future/today reminders into two distinct sections
+- Top section shows reminder information: Title, Date, Days to go, Details
+- Second section shows reflective data with "What happened on" heading
+- Reflection date displayed prominently below the section heading
+- Clear visual separation between reminder info and historical/reflective data
+- History view layout unchanged - maintains existing structure
+- Improved readability and understanding of what data is being shown

@@ -21,14 +21,14 @@ struct ReminderDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                Text(viewModel.reminder.title)
-                    .font(.title)
-                    .bold()
-
                 // For past reminders (History), show the reminder date and what data is being displayed for
-                // For future reminders, show reflection date, days remaining, and reminder date
+                // For future reminders, show reminder info at top, then reflective data section
                 if viewModel.reminder.daysRemaining < 0 {
-                    // Past event - show the actual reminder date
+                    // HISTORY VIEW - Past event - show the actual reminder date
+                    Text(viewModel.reminder.title)
+                        .font(.title)
+                        .bold()
+
                     VStack(spacing: 8) {
                         Text(viewModel.reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
                             .font(.headline)
@@ -41,29 +41,57 @@ struct ReminderDetailView: View {
                             .foregroundColor(.secondary)
                     }
                     .padding(.horizontal)
-                } else if let reflectionDate = viewModel.reminder.reflectionDate {
-                    // Future/today event - show reflection date, days, and reminder date
-                    VStack(spacing: 12) {
+
+                    Divider()
+
+                    if let description = viewModel.reminder.description, !description.isEmpty {
+                        VStack(alignment: .leading) {
+                            Text("Description")
+                                .font(.headline)
+                            Text(description)
+                                .font(.body)
+                        }
+                        .padding(.horizontal)
+                    }
+                } else {
+                    // REMINDERS VIEW - Future/today event - show reminder info, then reflective data
+                    Text(viewModel.reminder.title)
+                        .font(.title)
+                        .bold()
+
+                    Text(viewModel.reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
+                        .font(.headline)
+
+                    Text(viewModel.reminder.daysRemaining == 0 ? "Today" : "\(viewModel.reminder.daysRemaining) day\(viewModel.reminder.daysRemaining == 1 ? "" : "s") left")
+                        .font(.title2)
+                        .fontWeight(.medium)
+
+                    if let description = viewModel.reminder.description, !description.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Details")
+                                .font(.headline)
+                            Text(description)
+                                .font(.body)
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                    }
+
+                    Divider()
+                        .padding(.top, 8)
+
+                    // Reflective data section heading
+                    if let reflectionDate = viewModel.reminder.reflectionDate {
+                        Text("What happened on")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .padding(.top, 8)
+
                         Text(reflectionDate.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
-                            .font(.body)
-                        Text("\(viewModel.reminder.daysRemaining) Day\(viewModel.reminder.daysRemaining == 1 ? "" : "s")")
-                            .fontWeight(.medium)
-                        Text(viewModel.reminder.date.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
-                            .font(.body)
-                    }
-                    .padding(.horizontal)
-                }
-
-                Divider()
-
-                if let description = viewModel.reminder.description, !description.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Description")
                             .font(.headline)
-                        Text(description)
-                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .padding(.bottom, 8)
                     }
-                    .padding(.horizontal)
                 }
 
                 // Photos Section
